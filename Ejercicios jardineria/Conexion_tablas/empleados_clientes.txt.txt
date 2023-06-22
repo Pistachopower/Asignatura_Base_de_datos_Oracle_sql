@@ -1,0 +1,3 @@
+select *
+from empleados e, clientes c
+where e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS;

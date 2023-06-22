@@ -1,0 +1,129 @@
+1. Obtener el nombre completo (nombre y apellido) del empleado que no tiene jefe.
+SELECT E.NOMBRE || ' ' || E.APELLIDO1 || ' ' || COALESCE(E.APELLIDO2, '') AS NOMBRE_COMPLETO
+FROM EMPLEADOS E
+WHERE E.CODIGOJEFE IS NULL;
+
+
+2. Cuánto dinero se hubiera gastado cada cliente si hubiera vendido los productos al precio de
+venta registrado en productos.
+SELECT C.NOMBRECLIENTE, SUM(D.CANTIDAD * P.PRECIOVENTA) AS TOTAL_GASTADO
+FROM CLIENTES C
+INNER JOIN PEDIDOS PE ON C.CODIGOCLIENTE = PE.CODIGOCLIENTE
+INNER JOIN DETALLEPEDIDOS D ON PE.CODIGOPEDIDO = D.CODIGOPEDIDO
+INNER JOIN PRODUCTOS P ON D.CODIGOPRODUCTO = P.CODIGOPRODUCTO
+GROUP BY C.NOMBRECLIENTE;
+
+
+3. Si la diferencia entre el precio de venta y el precio del proveedor es el margen. 
+Que margen hubiera tenido cada pedido.
+SELECT PE.CODIGOPEDIDO, SUM(D.CANTIDAD * (P.PRECIOVENTA - P.PRECIOPROVEEDOR)) AS MARGEN
+FROM PEDIDOS PE
+INNER JOIN DETALLEPEDIDOS D ON PE.CODIGOPEDIDO = D.CODIGOPEDIDO
+INNER JOIN PRODUCTOS P ON D.CODIGOPRODUCTO = P.CODIGOPRODUCTO
+GROUP BY PE.CODIGOPEDIDO;
+
+
+4. Obtener el país donde han invertido más dinero en compras.
+select o.pais, sum(dp.cantidad * pro.precioventa) as dinero_compras
+from detallepedidos dp, pedidos p, clientes c,
+empleados e, oficinas o, productos pro
+where p.codigopedido= dp.codigopedido
+and pro.codigoproducto= dp.codigoproducto
+and c.codigocliente= p.codigocliente
+and e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS
+and o.codigooficina= e.codigooficina
+group by o.pais
+order by dinero_compras desc
+fetch first 1 row only;
+
+
+5. Obtener el cliente que ha hecho el pedido con el comentario más largo (número de letras del
+comentario).
+select c.codigocliente,  p.comentarios, length(p.comentarios) as 
+longitud_comentario
+from pedidos p, clientes c
+where c.codigocliente= p.codigocliente
+and p.comentarios is not null
+order by longitud_comentario desc
+fetch first 1 row only;
+
+
+6. Teniendo presente que el dinero de los pedidos rechazados es devuelto al cliente, obtener cuanto se ha gastado cada cliente en 'Plantas aromáticas'.
+select c.codigocliente,c.nombrecliente,
+sum(dp.cantidad * pro.precioventa) as gastado
+from clientes c, pedidos p,  detallepedidos dp, productos pro,
+gamasproductos gm
+where c.codigocliente= p.codigocliente
+and p.codigopedido= dp.codigopedido
+and dp.codigoproducto= pro.codigoproducto
+and gm.gama= pro.gama
+and upper(gm.DESCRIPCIONTEXTO)= 'PLANTAS AROMÁTICAS'
+group by c.codigocliente, c.nombrecliente;
+
+--HAY QUE VERIFICAR SI ESTA BIEN
+7. Obtener el número de clientes distintos que han comprado en cada gama.
+SELECT gama, COUNT(DISTINCT cliente_id) AS num_clientes
+FROM pedidos
+GROUP BY gama;
+
+8. Obtener los empleados que están en oficinas españolas y que no tienen ningún cliente a su
+cargo.
+SELECT e.*
+FROM empleados e
+LEFT JOIN clientes c ON e.empleado_id = c.empleado_id
+WHERE e.oficina = 'España'
+AND c.cliente_id IS NULL;
+
+9. Obtener el nombre de los clientes y el nombre de los empleados donde los empleados
+trabajan en el mismo país que los clientes.
+SELECT c.nombre AS nombre_cliente, e.nombre AS nombre_empleado
+FROM empleados e
+JOIN clientes c ON e.empleado_id = c.empleado_id
+WHERE e.pais = c.pais;
+
+10. Obtener el país donde se ha gastado más dinero en comprar productos.
+SELECT c.pais, SUM(p.precio * dp.cantidad) AS total_gastado
+FROM clientes c
+JOIN pedidos o ON c.cliente_id = o.cliente_id
+JOIN detalles_pedido dp ON o.pedido_id = dp.pedido_id
+JOIN productos p ON dp.producto_id = p.producto_id
+GROUP BY c.pais
+ORDER BY total_gastado DESC
+LIMIT 1;
+
+--ERRATA CON EL NOMBRE
+11. ENMANUEL tienes problemas con su jefe y quieres quejarse al jefe de su jefe, pero no sabe
+ni quien se, ni en qué oficina trabaja (ciudad). ¿Podrías ayudarle, necesita saber el nombre
+completo, el email, y la ciudad donde está su oficina?
+SELECT e.nombre_completo, e.email, o.ciudad
+FROM empleados e
+JOIN oficinas o ON e.oficina_id = o.oficina_id
+WHERE e.empleado_id = (
+SELECT jefe_id
+FROM empleados
+WHERE empleado_id = (
+SELECT jefe_id
+FROM empleados
+WHERE nombre = 'Emmanuel'
+)
+);
+
+12. Si por cada letra del comentario se le resta un día a la fecha de pedido, obtener el cliente
+(nombre) del pedido que se pidió el primero, en base a la fecha de pedido.
+SELECT c.NOMBRECLIENTE 
+FROM PEDIDOS p 
+JOIN CLIENTES c ON p.CODIGOCLIENTE = c.CODIGOCLIENTE 
+WHERE p.FECHAPEDIDO = (SELECT MIN(FECHAPEDIDO) FROM PEDIDOS)
+
+
+13. Si de lo gastado (pedidos) por los clientes, los directores de oficina tienen una comisión del
+20%, y los representantes de ventas un 15%, obtén cuanta comisión tiene cada uno de los
+empleados de estos tipos, mostrando el nombre del empleado.
+
+
+14. Obtener en una sola consulta el nombre, ciudad y país de los empleados y el nombre ciudad
+y país de su jefe.
+
+
+15. Borrar los productos que no se han vendido nunca. Hacer posteriormente Rollback
+

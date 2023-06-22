@@ -1,0 +1,22 @@
+select *
+from empleados subor, empleados jefe
+where subor.codigoempleado= jefe.codigojefe;
+
+--devuelve un listado que muestre el nombre de cada
+--empleado, el nombre de su jefe, y el nombre del jefe de su jefe
+	--solucion 1
+select subor.nombre as empleado, jefe.nombre as jefe, 
+jefe_jefe.nombre as jefe_del_jefe
+from empleados subor, empleados jefe, empleados jefe_jefe
+where subor.codigojefe= jefe.codigoempleado
+and jefe.codigojefe=  jefe_jefe.codigoempleado;
+
+	--solucion 2
+select subor.nombre as empleado, jefe.nombre as jefe, 
+jefe_jefe.nombre as jefe_del_jefe
+from empleados subor
+left join empleados jefe 
+on subor.codigojefe= jefe.codigoempleado
+left join empleados jefe_jefe 
+on jefe_jefe.codigojefe= jefe_jefe.codigoempleado
+order by subor.codigoempleado;

@@ -1,0 +1,4 @@
+select *
+from pedidos p, clientes c, pagos pa
+where c.codigocliente= p.codigocliente
+and c.codigocliente= pa.codigocliente;

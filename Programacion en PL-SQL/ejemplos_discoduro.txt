@@ -1,0 +1,73 @@
+/*
+begin 
+
+DBMS_OUTPUT.PUT_LINE('Hola mundo');
+
+end; 
+*/
+
+/*
+declare 
+    v_mi_numero number(8):= 12;
+
+begin 
+    if (v_mi_numero > 10)  then
+        dbms_output.put_line('mi numero es mayor a 10');
+    else
+        dbms_output.put_line('mi numero es menor a 10');
+    end if;
+end; 
+
+
+*/
+
+/*
+declare 
+    v_mi_numero number(8) := &v_mi_numero;
+begin 
+    dbms_output.put_line('El valor introducido es ' || v_mi_numero );
+ 
+end; 
+
+*/
+
+set serveroutput on;
+/*
+declare 
+    v_i number(8):= 1;
+
+begin
+    while (v_i<=10)
+    loop
+        dbms_output.put_line(v_i);
+        v_i:= v_i + 1;
+    
+    end loop;
+
+end;
+*/
+
+/*
+begin
+    for i in 1..10
+    loop 
+        dbms_output.put_line(i);
+    end loop;
+    
+end;
+*/
+
+/*
+declare
+    i number(8) := 1;
+    
+begin 
+    loop
+    dbms_output.put_line(i);
+    i:= i + 1;
+    end loop;
+end;
+*/
+
+
+

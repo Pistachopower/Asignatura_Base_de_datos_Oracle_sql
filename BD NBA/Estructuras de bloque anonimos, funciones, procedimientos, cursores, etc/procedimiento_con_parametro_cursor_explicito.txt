@@ -1,0 +1,27 @@
+CREATE OR REPLACE PROCEDURE sp_NOMBRE_PROCEDIMIENTO (
+   p_PARAMETRO [TIPO_DATO_TABLA_O_PROPIA]
+   
+) IS
+    CURSOR c_NOMBRE_CURSOR is 
+    --consulta SQL
+    
+    --variables por cada fila/campo de la consulta
+    --ejemplo: v_fechapedido  detallepedidos.fechapedido%type;
+
+BEGIN
+    OPEN c_NOMBRE_CURSOR;
+    LOOP
+        FETCH c_NOMBRE_CURSOR INTO V_VARIABLES_CURSOR, V_VARIABLES_CURSOR;
+        EXIT WHEN c_NOMBRE_CURSOR%NOTFOUND;
+	
+	--DEPENDE DEL EJERCICIO
+	--DBMS_OUTPUT.PUT_LINE(''); 
+    END LOOP;
+
+	--SENTECIAS INSERT, UPDATE, DELETE O CALCULO
+    CLOSE c_NOMBRE_CURSOR;
+
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);  
+END;

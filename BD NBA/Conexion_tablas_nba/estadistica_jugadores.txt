@@ -1,0 +1,3 @@
+SELECT *
+FROM estadisticas e, jugadores j
+where j.codigo= e.jugador;

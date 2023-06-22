@@ -1,0 +1,5 @@
+select *
+from  pagos p, clientes c, empleados e, oficinas o
+where c.codigocliente= p.codigocliente
+and e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS
+and o.codigooficina= e.codigooficina;

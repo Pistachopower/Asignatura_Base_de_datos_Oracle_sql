@@ -1,0 +1,4 @@
+select *
+from empleados e, clientes c, oficinas o
+where e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS
+and o.codigooficina= e.codigooficina;

@@ -1,0 +1,582 @@
+/*
+1-devuelve un listado con el codigo de oficina y la ciudad donde hay 
+oficinas
+*/
+select codigooficina, ciudad
+from oficinas;
+
+
+/*
+--2-devuelve un listado con la ciudad y el telefono de las 
+oficinas de españa 
+*/
+select ciudad, telefono
+from oficinas
+where upper(pais)= 'ESPAÑA';
+
+/*
+3-DEVUELVE UN LISTADO CON EL NOMBRE, APELLIDO Y EMAIL DE LOS EMPLEADOS
+CUYO JEFE TIENE UN CODIGO DE JEFE IGUAL A 7
+*/
+select e.nombre, e.apellido1 || ' ' || e.apellido2 as apellidos, e.email 
+from empleados e, empleados j
+where e.codigoempleado= j.codigoempleado
+and j.codigojefe=j.codigojefe
+and j.codigojefe in (
+                    select j.codigojefe
+                    from empleados j
+                    where j.codigojefe= 7
+);
+
+
+/*
+4-devuelve el nombre del puesto, nombre, apellido, email del jefe 
+de la empresa
+*/
+select nombre, apellido1, apellido2, email 
+from empleados
+where codigojefe is null;
+
+/*
+5-devuelve un listado con el nombre, apellido y puesto 
+de aquellos empleados que no sean representantes de ventas
+*/
+select nombre, apellido1,apellido2, puesto  
+from empleados 
+where upper(puesto) <> 'REPRESENTANTE VENTAS';
+
+/*
+6-devuelve un listado con el nombre de todos los clientes 
+españoles 
+*/
+select nombrecliente, pais
+from clientes
+where upper(pais)= 'SPAIN';
+
+/*
+7-devuelve un listado con los distintos estados por lo que 
+puede pasar un pedido
+*/
+select DISTINCT estado
+from pedidos;
+
+/*
+8. Devuelve un listado con el código de cliente de aquellos clientes que
+realizaron algún pago en 2008. Tenga en cuenta que deberá eliminar
+aquellos códigos de cliente que aparezcan repetidos. Resuelva la consulta:
+*/
+select DISTINCT  c.codigocliente, p.fechapago 
+from pagos p, clientes c 
+where c.codigocliente= p.codigocliente
+and p.fechapago in (
+                    select p.fechapago 
+                    from pagos p
+                    where to_char(p.fechapago,'yyyy')='2008'
+
+);
+
+/*
+9. Devuelve un listado con el código de pedido, 
+código de cliente, fecha esperada y fecha de 
+entrega de los pedidos que no han sido entregados a
+tiempo.
+*/
+select codigopedido, codigocliente, fechaesperada, fechaentrega
+from pedidos
+where fechaentrega > fechaesperada;
+
+/*
+10.Devuelve un listado con el código de pedido, código de cliente, 
+fecha esperada y fecha de entrega de los pedidos cuya fecha de 
+entrega ha sido al menos dos días antes de la fecha esperada.
+*/
+select p.codigopedido, c.codigocliente, p.FECHAESPERADA,
+p.FECHAENTREGA
+from pedidos p, clientes c
+where c.codigocliente= p.codigocliente
+and p.FECHAENTREGA<=p.FECHAESPERADA - 2;
+
+
+/*
+11.Devuelve un listado de todos los pedidos que fueron 
+rechazados en 2009.
+*/
+select *
+from pedidos
+where upper(estado)= 'RECHAZADO'
+and to_char(fechapedido, 'yyyy')= '2009';
+
+/*
+12.Devuelve un listado de todos los pedidos que han sido entregados 
+en el mes de enero de cualquier año.
+*/
+select * 
+from pedidos
+where to_char(fechaentrega, 'mm')= '01';
+
+/*
+13.Devuelve un listado con todos los pagos que se 
+realizaron en el año 2008 mediante Paypal. 
+Ordene el resultado de mayor a menor.
+*/
+select fechapago, formapago 
+from pagos
+where to_char(fechapago, 'yyyy')= '2008' 
+and upper(formapago)= 'PAYPAL'
+order by fechapago desc;
+
+/*
+14.Devuelve un listado con todas las formas de pago que aparecen 
+en la tabla pago. Tenga en cuenta que no deben aparecer formas 
+de pago repetidas.
+*/
+select DISTINCT formapago 
+from pagos;
+
+/*
+15.Devuelve un listado con todos los productos que pertenecen a la gama
+Ornamentales y que tienen más de 100 unidades en stock. El listado deberá
+estar ordenado por su precio de venta, mostrando en primer lugar los de
+mayor precio.
+*/
+select precioventa, gama, cantidadenstock
+from productos
+where upper(gama)= 'ORNAMENTALES'
+and cantidadenstock> 100
+order by precioventa desc;
+
+
+/*
+16.Devuelve un listado con todos los clientes que sean de la 
+ciudad de Madrid y cuyo representante de ventas tenga el código 
+de empleado 11 o 30.
+*/
+select * 
+from clientes
+where upper(ciudad)= 'MADRID'
+and codigoempleadorepventas= 11
+or codigoempleadorepventas= 30;
+
+/*
+17.Obtén un listado con el nombre de cada cliente 
+y el nombre y apellido de su
+representante de ventas.
+*/
+select c.nombrecliente, e.nombre, e.apellido1 || ' ' || e.apellido2 as apellidos_repre_ventas
+from clientes c, empleados e
+where e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS;
+
+/*
+18.Muestra el nombre de los clientes que hayan realizado 
+pagos junto con el
+nombre de sus representantes de ventas.
+*/
+select p.idtransaccion, c.nombrecliente, e.nombre
+from clientes c, pagos p, empleados e
+where e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS
+and p.codigocliente= c.codigocliente;
+
+/*
+19.Muestra el nombre de los clientes que no hayan 
+realizado pagos junto con el
+nombre de sus representantes de ventas.
+*/
+select c.nombrecliente,p.codigocliente, e.nombre as repre_ventas
+from clientes c, empleados e, pagos p
+where c.CODIGOEMPLEADOREPVENTAS= e.CODIGOEMPLEADO
+and c.codigocliente= p.codigocliente(+)
+and p.codigocliente is null;
+
+/*
+--20.Devuelve el nombre de los clientes que han hecho pagos 
+y el nombre de sus representantes junto con la ciudad de 
+la oficina a la que pertenece el representante.
+*/
+select count(*), c.nombrecliente ,e.nombre, o.ciudad
+from  pagos p, clientes c, empleados e, oficinas o
+where c.codigocliente= p.codigocliente
+and e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS
+and o.codigooficina= e.codigooficina
+group by p.codigocliente,  c.nombrecliente, 
+e.nombre, o.ciudad;
+
+/*
+--22.Lista la dirección de las oficinas que tengan clientes 
+en Fuenlabrada.
+*/
+
+select c.codigocliente, c.lineadireccion2
+from oficinas o, empleados e, clientes c
+where o.codigooficina= e.codigooficina
+and e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS
+and c.lineadireccion2 in ('FUENLABRADA');
+
+/*
+--23.Devuelve el nombre de los clientes y el nombre de sus 
+representantes junto con la ciudad de la oficina a la que pertenece 
+el representante.
+*/
+select c.nombrecliente, e.nombre, o.ciudad
+from oficinas o, empleados e, clientes c
+where o.codigooficina= e.codigooficina
+and e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS;
+
+/*
+--24.Devuelve un listado con el nombre de los empleados 
+junto con el nombre de sus jefes.
+*/
+select count(*), subor.nombre as empleado,jefe.nombre as jefe
+from empleados subor, empleados jefe
+where subor.codigoempleado= jefe.codigojefe
+group by subor.codigoempleado, jefe.codigojefe, subor.nombre, jefe.nombre ;
+
+
+/*
+--25.Devuelve un listado que muestre el nombre de cada empleado, 
+el nombre de su jefe y el nombre del jefe de su jefe.
+*/
+select subor.nombre as empleado, jefe.nombre as jefe, 
+jefe_jefe.nombre as jefe_del_jefe
+from empleados subor, empleados jefe, empleados jefe_jefe
+where subor.codigojefe= jefe.codigoempleado
+and jefe.codigojefe=  jefe_jefe.codigoempleado;
+
+/*
+--26.Devuelve el nombre de los clientes a los que no se 
+les ha entregado a tiempo un pedido.
+*/
+select count(*), c.nombrecliente,p.fechaesperada, p.fechaentrega 
+from pedidos p, clientes c
+where c.codigocliente= p.codigocliente
+and p.fechaentrega>p.fechaesperada
+group by c.codigocliente,c.nombrecliente,
+p.fechaesperada, p.fechaentrega;
+
+/*
+--27.Devuelve un listado de las diferentes gamas de producto 
+que ha comprado cada cliente.
+*/
+select c.codigocliente, gp.gama
+from clientes c, pedidos p, 
+detallepedidos dp, productos pro, gamasproductos gp
+where c.codigocliente= p.codigocliente
+and p.codigopedido= dp.codigopedido
+and pro.codigoproducto= dp.codigoproducto
+and gp.gama= pro.gama
+group by c.codigocliente,gp.gama
+order by c.codigocliente;
+
+/*
+--28.Devuelve un listado que muestre solamente los clientes 
+que no han realizado ningún pago.
+*/
+select c.nombrecliente, c.codigocliente, p.IDTRANSACCION
+from clientes c, pagos p
+where p.codigocliente(+)= c.codigocliente
+and p.IDTRANSACCION is null
+group by c.nombrecliente, c.codigocliente, p.IDTRANSACCION;
+
+
+/*
+--29.Devuelve un listado que muestre solamente los 
+clientes que no han realizado ningún pedido.
+*/
+select c.codigocliente,c.nombrecliente, p.codigopedido
+from pedidos p, clientes c
+where c.codigocliente= p.codigocliente(+)
+and p.codigocliente is null
+group by c.codigocliente,c.nombrecliente, p.codigopedido;
+
+/*
+--30.Devuelve un listado que muestre los clientes que no 
+han realizado ningún pago y los que no han realizado ningún pedido.
+*/
+select c.codigocliente, p.codigopedido, pa.IDTRANSACCION
+from pedidos p, clientes c, pagos pa
+where c.codigocliente= p.codigocliente(+)
+and c.codigocliente= pa.codigocliente(+)
+and p.codigocliente is null
+and pa.codigocliente is null
+;
+
+/*
+--31.Devuelve un listado que muestre solamente los empleados 
+que no tienen una oficina asociada.
+*/
+--FALTA RESOLVER
+select * --e.codigoempleado, o.codigooficina 
+from empleados e, oficinas o
+where e.codigooficina= o.codigooficina(+)
+and e.codigooficina is null;
+
+select e.codigoempleado, o.codigooficina 
+from empleados e 
+left outer join oficinas o 
+on e.codigooficina= o.codigooficina
+where e.codigooficina is null;
+
+/*
+--32.Devuelve un listado que muestre solamente los empleados 
+que no tienen un cliente asociado.
+*/
+select e.codigoempleado, c.codigocliente
+from empleados e, clientes c
+where e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS(+)
+and c.codigocliente is null;
+
+/*
+--33.Devuelve un listado que muestre solamente los empleados que 
+no tienen un cliente asociado junto con los datos de la oficina 
+donde trabajan.
+*/
+select e.codigoempleado, c.codigocliente, o.*
+from empleados e, clientes c, oficinas o
+where e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS(+)
+and o.codigooficina= e.codigooficina
+and c.codigocliente is null;
+
+/*
+--34.Devuelve un listado que muestre los empleados 
+que no tienen una oficina asociada y los que no 
+tienen un cliente asociado.
+*/
+--NO DEVUELVE DATOS
+select e.codigoempleado, c.codigocliente,o.codigooficina
+from empleados e, clientes c, oficinas o 
+where e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS(+)
+and e.codigooficina= o.codigooficina(+)
+and c.codigocliente is null
+and o.codigooficina is null;
+
+select * 
+from empleados e
+where e.codigooficina not in (
+                        select o.codigooficina
+                        from oficinas o)
+and e.codigoempleado not in (
+                        select c.CODIGOEMPLEADOREPVENTAS
+                        from clientes c);
+
+select o.codigooficina
+from oficinas o;
+
+
+/*
+--35.Devuelve un listado de los productos que nunca han aparecido 
+en un pedido.
+*/
+select p.codigoproducto, dp.codigopedido
+from productos p, detallepedidos dp 
+where p.codigoproducto= dp.codigoproducto(+)
+and dp.codigopedido is null;
+
+/*
+--36.Devuelve un listado de los productos que nunca han aparecido 
+en un pedido. El resultado debe mostrar el nombre, 
+la descripción y la imagen del producto.
+*/
+select p.codigoproducto, dp.codigopedido, p.nombre, p.descripcion,
+nvl(gp.imagen, 'NO TIENE IMAGEN') as imagen
+from productos p, detallepedidos dp, gamasproductos gp 
+where p.codigoproducto= dp.codigoproducto(+)
+and gp.gama= p.gama
+and dp.codigopedido is null;
+
+/*
+--37.Devuelve las oficinas donde no trabajan ninguno de los empleados 
+que hayan sido los representantes de ventas de algún cliente 
+que haya realizado la compra de algún producto de la gama Frutales.
+*/
+select *
+from oficinas o, empleados e, clientes c
+where o.codigooficina(+)= e.codigooficina
+and c.CODIGOEMPLEADOREPVENTAS= e.codigoempleado;
+
+select * from calendario;
+
+/*
+--39.Devuelve un listado con los datos de los empleados 
+que no tienen clientes asociados y el nombre de su jefe asociado.
+*/
+select subor.codigoempleado, subor.nombre, subor.codigojefe, jefe.nombre 
+from empleados subor, clientes c,  empleados jefe
+where  subor.CODIGOEMPLEADO= c.CODIGOEMPLEADOREPVENTAS(+)
+and subor.codigojefe= jefe.codigoempleado
+and c.codigocliente is null;
+
+/*
+--40.¿Cuántos empleados hay en la compañía?
+*/
+select count(*)
+from empleados;
+
+/*
+--41.¿Cuántos clientes tiene cada país?
+*/
+select count(pais)
+from clientes;
+
+/*
+42.¿Cuál fue el pago medio en 2009?
+*/
+select avg(cantidad) as pago_medio 
+from pagos
+where to_char(fechapago, 'yyyy')='2009';
+
+select *
+from pagos;
+
+/*
+43.¿Cuántos pedidos hay en cada estado? Ordena el resultado de forma
+descendente por el número de pedidos.
+*/
+select estado, count(codigopedido) as total_pedidos
+from pedidos
+group by estado
+order by count(codigopedido) desc;
+
+/*
+44.Calcula el precio de venta del producto más caro y más barato en una
+misma consulta.
+*/
+select max(precioventa) as caro, min(precioventa) as barato
+from productos;
+
+/*45.Calcula el número de clientes que tiene la empresa.*/
+select count(*) 
+from clientes;
+
+/*
+46.¿Cuantos clientes existen con domicilio en la ciudad de Madrid?
+*/
+select COUNT(ciudad) 
+from clientes
+where upper(ciudad)= 'MADRID';
+/*
+47.¿Calcula cuantos clientes tiene cada una de las ciudades 
+que empiezan por M?
+*/
+select COUNT(CIUDAD) 
+from clientes
+where upper(ciudad) like 'M%' ;
+
+/*
+48.Devuelve el nombre de los representantes de ventas 
+y el número de clientes al que atiende cada uno.
+*/
+
+select e.nombre, c.codigocliente--count(c.CODIGOCLIENTE)
+from empleados e, clientes c
+where e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS;
+--group by e.nombre;
+
+/*49.Calcula el número de clientes que no tiene asignado 
+representante de
+ventas.*/
+select count(*) 
+from clientes c
+where c.CODIGOEMPLEADOREPVENTAS is null;
+
+/*
+50.Calcula la fecha del primer y último pago realizado por 
+cada uno de los clientes. El listado deberá mostrar el 
+nombre y los apellidos de cada cliente.
+*/
+select p.fechapago, c.nombrecliente
+from clientes c, pagos p
+where p.codigocliente= c.codigocliente
+and p.fechapago in (
+            (select min(p.fechapago) 
+            from pagos p),
+
+            (select max(p.fechapago) 
+            from pagos p)
+);
+
+/*
+51.Calcula el número de productos diferentes que 
+hay en cada uno de los pedidos.
+*/
+select *
+from detallepedidos;
+
+/*
+52.Calcula la suma de la cantidad total de todos los 
+productos que aparecen en cada uno de los pedidos.
+*/
+select p.codigopedido, sum(dp.cantidad), count(dp.codigopedido)
+from detallepedidos dp, pedidos p
+where p.codigopedido= dp.codigopedido
+group by dp.codigopedido
+order by p.codigopedido;
+
+/*
+53.Devuelve un listado de los 20 productos más vendidos 
+y el número total de unidades que se han vendido de cada uno. 
+El listado deberá estar ordenado por el número total de unidades 
+vendidas.
+*/
+select rownum, nombre, suma, total
+from (select p.nombre as nombre, sum(dp.cantidad) suma, 
+count(p.nombre) as total
+        from pedidos pe, detallepedidos dp, productos p
+        where pe.codigopedido= dp.codigopedido
+        and p.codigoproducto= dp.codigoproducto
+        group by p.nombre
+        order by sum(dp.cantidad) desc)
+where rownum <=20;
+
+/*
+54.La facturación que ha tenido la empresa en toda la historia, 
+indicando la base imponible, el IVA y el total facturado. 
+La base imponible se calcula sumando el coste del producto por el 
+número de unidades vendidas de la tabla detalle pedido. 
+El IVA es el 21 % de la base imponible, y el total la
+suma de los dos campos anteriores.
+*/
+SELECT C.NOMBRECLIENTE, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) AS BASE_IMPONIBLE,
+       SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) * 0.21 AS IVA,
+       SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) * 1.21 AS TOTAL_FACTURADO
+FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP
+WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND DP.CODIGOPEDIDO = P.CODIGOPEDIDO
+GROUP BY C.NOMBRECLIENTE;
+
+/*
+55.La misma información que en la pregunta anterior, 
+pero agrupada por código
+de producto.
+*/
+SELECT PRO.CODIGOPRODUCTO, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) AS BASE_IMPONIBLE,
+       SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) * 0.21 AS IVA,
+       SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) * 1.21 AS TOTAL_FACTURADO
+FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP, PRODUCTOS PRO
+WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND DP.CODIGOPEDIDO = P.CODIGOPEDIDO
+AND PRO.CODIGOPRODUCTO= DP.CODIGOPRODUCTO
+GROUP BY PRO.CODIGOPRODUCTO;
+
+/*
+56.La misma información que en la pregunta anterior, pero 
+agrupada por código de producto filtrada por los códigos que 
+empiecen por OR.
+*/
+SELECT PRO.CODIGOPRODUCTO, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) AS BASE_IMPONIBLE,
+       SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) * 0.21 AS IVA,
+       SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) * 1.21 AS TOTAL_FACTURADO
+FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP, PRODUCTOS PRO
+WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND DP.CODIGOPEDIDO = P.CODIGOPEDIDO
+AND PRO.CODIGOPRODUCTO= DP.CODIGOPRODUCTO
+AND UPPER(PRO.CODIGOPRODUCTO) LIKE 'OR%'
+GROUP BY PRO.CODIGOPRODUCTO;
+
+--58. Muestre la suma total de todos los pagos que se realizaron 
+--para cada uno de los años que aparecen en la tabla pagos.
+select sum(cantidad) total, to_char(fechapago, 'yyyy')
+from pagos
+group by to_char(fechapago, 'yyyy')
+order by to_char(fechapago, 'yyyy');
+
+
+

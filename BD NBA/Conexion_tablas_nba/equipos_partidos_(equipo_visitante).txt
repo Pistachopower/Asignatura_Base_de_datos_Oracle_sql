@@ -1,0 +1,3 @@
+select *
+from equipos eq, partidos p
+where  eq.nombre= p.equipo_visitante;

@@ -1,0 +1,20 @@
+CREATE OR REPLACE FUNCTION F_NOMBRE_FUNCION(P_ TIPO_DATO, P_ TIPO_DATO)
+RETURN TIPO_DATO
+IS
+   V_ TIPO_DATO;
+    
+BEGIN
+
+   
+    
+    RETURN V_;
+    
+    
+EXCEPTION
+
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    RETURN SQLERRM;
+
+    
+END;

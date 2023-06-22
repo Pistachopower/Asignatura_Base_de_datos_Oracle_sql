@@ -1,0 +1,3048 @@
+<<<<<<<<<<clase 1>>>>>>>>>>>>>>>>>
+ALTER TABLE EMP MODIFY ENAME VARCHAR2(50);
+
+set serveroutput on;
+
+DECLARE
+ 
+ --V_VARIABLE VARCHAR2(10):= 'HOLA DAW';
+ V_NOMBRE_EMP EMP.ENAME%TYPE := 'ELVIS FABRICIO';
+ 
+ -- V_NOMBRE_EMP VARCHAR2(10) := 'IVAN';
+ 
+BEGIN
+
+INSERT INTO EMP (EMPNO, ENAME)
+VALUES (68,V_NOMBRE_EMP);
+
+
+  DBMS_OUTPUT. PUT_LINE (V_NOMBRE_EMP);
+ 
+
+END;
+
+SELECT *
+FROM EMP ORDER BY 1;
+
+<<<<<<<<<<clase 2>>>>>>>>>>>>>>>>>
+set serveroutput on;
+
+declare
+    
+    v_numero integer := &Dime_numero;
+    v_pariedad varchar2(5) := 'impar';
+
+begin
+/*
+
+    if mod(v_numero,2)= 0 then
+        DBMS_OUTPUT. PUT_LINE (V_Numero || ' es par ');
+    else 
+        DBMS_OUTPUT. PUT_LINE (V_Numero || ' es impar ');
+    end if;
+*/
+
+    if mod(v_numero,2)= 0 then
+        v_pariedad := 'par';
+    end if;
+    
+    DBMS_OUTPUT. PUT_LINE (V_Numero || ' es '|| v_pariedad);
+
+end;
+
+declare
+    v_acumulado integer:= 0;
+    v_numero integer := &PON_NUMERO;
+    
+BEGIN
+
+FOR k in 1..v_numero 
+loop
+    v_acumulado := v_acumulado + k;
+end loop;
+
+DBMS_OUTPUT. PUT_LINE (' la suma de los '||v_numero||' primeros números es = '||v_acumulado);
+
+END;
+
+<<<<<<<<<<clase 3>>>>>>>>>>>>>>>>>
+/*DADO UNA PALABRA, POR EJEMPLO ADRIAN, ME TIENES QUE MONSTAR POR PANTALLA LA PALABRA EN VERTICAL ES DECIR
+A
+D
+R
+I
+A
+N
+*/
+/*
+DECLARE
+
+    V_NOMBRE VARCHAR2(10):=UPPER('&IVAN');
+
+BEGIN 
+
+for k in 1..length(v_nombre) 
+loop
+
+    DBMS_OUTPUT. PUT_LINE (substr(v_nombre,k,1));
+end loop;   
+    
+END;*/
+
+/*
+DECLARE
+    V_PALABRA1 VARCHAR2(10):=&PALABRA1;
+    V_PALABRA2 VARCHAR2(12):=&PALABRA2;
+
+
+BEGIN
+   IF UPPER(V_PALABRA1) = UPPER(V_PALABRA2) THEN
+        DBMS_OUTPUT. PUT_LINE ('IGUALES');
+   ELSE
+        DBMS_OUTPUT. PUT_LINE ('DISTINTAS');
+   END IF;
+    
+END;
+  */
+*************enlace tabla dni****************** 
+https://www.interior.gob.es/opencms/ca/servicios-al-ciudadano/tramites-y-gestiones/dni/calculo-del-digito-de-control-del-nif-nie/#:~:text=Por%20ejemplo%2C%20si%20el%20n%C3%BAmero,n%C3%BAmeros%20y%20d%C3%ADgito%20de%20control
+
+********solucion alberto*************
+set serveroutput on;
+
+declare
+
+    v_dni int := 30258485;
+    cadena varchar2(25) := 'TRWAGMYFPDXBNJZSQVHLCKE';
+begin
+
+    DBMS_OUTPUT.PUT_LINE(substr(cadena,mod(v_dni,23)+1,1));
+
+end;
+
+********solucion profesor****************
+declare
+
+    v_dni varchar2(9) := '30258485j';
+    cadena constant varchar2(25) := 'TRWAGMYFPDXBNJZSQVHLCKE';
+    v_letra_calculada char(1);
+begin
+
+    v_letra_calculada := substr(cadena,mod(to_number(substr(v_dni,1,length(v_dni)-1)),23)+1,1);
+    
+    if v_letra_calculada <> substr(v_dni,-1) then
+        DBMS_OUTPUT.PUT_LINE('dni erróneo');
+    end if;
+end;
+
+<<<<<<<<<<clase 4>>>>>>>>>>>>>>>>>
+-- Dado un nombre de departamento obtener el empleado que mas cobra
+
+DECLARE
+
+    V_NOMBRE EMP.ENAME%TYPE;
+    V_CODIGO EMP.EMPNO%TYPE :=&CODIGO_EMPLEADO;
+    
+BEGIN
+
+    SELECT ENAME INTO V_NOMBRE
+    FROM EMP
+    WHERE EMPNO = V_CODIGO;
+
+    DBMS_OUTPUT.PUT_LINE('EL EMPLEADO CON CODIGO '||V_CODIGO||' ES '||V_NOMBRE);
+
+EXCEPTION 
+WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('NO EXISTE EMPLEADO CON ESE CODIGO');
+
+END;
+    
+--- DADO UN NOMBRE DE DEPARTAMENTO, OBTENER EL EMPLEADO QUE MAS COBRA.
+
+<<<<<<<<<<clase 5>>>>>>>>>>>>>>>>>
+--- DADO UN NOMBRE DE DEPARTAMENTO, OBTENER EL EMPLEADO QUE MAS COBRA
+set serveroutput on;
+DECLARE 
+
+    NOM_DEPT DEPT.DNAME%TYPE:= UPPER(&NOMBRE_DEPT);
+    NOM_EMP EMP.ENAME%TYPE;
+    
+BEGIN
+
+    SELECT E.ENAME INTO NOM_EMP
+    FROM EMP E, DEPT D
+    WHERE E.DEPTNO = D.DEPTNO
+    AND UPPER(D.DNAME) = NOM_DEPT
+    AND SAL = (SELECT MAX(E2.SAL) FROM EMP E2, DEPT D2
+                 WHERE E2.DEPTNO = D2.DEPTNO
+                 AND UPPER(D2.DNAME) = NOM_DEPT);        
+
+
+
+   dbms_output.put_line('El empleado que mas cobra del departamento '||NOM_DEPT || ' es '||NOM_EMP); 
+END; 
+
+********pendiente por dar la respuesta en la siguiente clase***********
+obtener con un for las sumas de las edades de todos los alumnos
+
+<<<<<<<<<<clase 6>>>>>>>>>>>>>>>>>
+/*
+DECLARE
+    nota NUMBER(3, 1);
+BEGIN
+    nota := &introduce_la_nota;
+    IF
+        nota >= 0
+        AND nota < 5
+    THEN
+        dbms_output.put_line('SUSPENSO');
+    ELSIF
+        nota >= 5
+        AND nota < 6
+    THEN
+        dbms_output.put_line('APROBADO');
+    ELSIF
+        nota >= 6
+        AND nota < 7
+    THEN
+        dbms_output.put_line('BIEN');
+    ELSIF
+        nota >= 7
+        AND nota < 9
+    THEN
+        dbms_output.put_line('NOTABLE');
+    ELSIF
+        nota >= 9
+        AND nota <= 10
+    THEN
+        dbms_output.put_line('SOBRESALIENTE');
+    ELSE
+        dbms_output.put_line('El valor introducido es incorrecto');
+    END IF;
+
+END;
+*/
+
+set serveroutput on;
+DECLARE 
+
+    NOM_DEPT DEPT.DNAME%TYPE:= UPPER(&NOMBRE_DEPT);
+    NOM_EMP EMP.ENAME%TYPE;
+    
+BEGIN
+
+    SELECT E.ENAME INTO NOM_EMP
+    FROM EMP E, DEPT D
+    WHERE E.DEPTNO = D.DEPTNO
+    AND UPPER(D.DNAME) = NOM_DEPT
+    AND SAL = (SELECT MAX(E2.SAL) FROM EMP E2, DEPT D2
+                 WHERE E2.DEPTNO = D2.DEPTNO
+                 AND UPPER(D2.DNAME) = NOM_DEPT);        
+
+
+
+   dbms_output.put_line('El empleado que mas cobra del departamento '||NOM_DEPT || ' es '||NOM_EMP); 
+END; 
+
+
+
+set serveroutput on;
+DECLARE 
+
+    NOM_DEPT DEPT.DNAME%TYPE:= UPPER(&NOMBRE_DEPT);
+    COD_DEPT DEPT.DEPTNO%TYPE;
+    NOM_EMP EMP.ENAME%TYPE;
+    
+BEGIN
+
+    SELECT DEPTNO  INTO COD_DEPT
+    FROM DEPT 
+    WHERE UPPER(DNAME) = NOM_DEPT;
+    
+    SELECT ENAME INTO NOM_EMP
+    FROM EMP
+    WHERE DEPTNO  = COD_DEPT
+    AND SAL = (SELECT MAX(SAL) FROM EMP E2  WHERE E2.DEPTNO = COD_DEPT);
+
+
+   dbms_output.put_line('El empleado que mas cobra del departamento '||NOM_DEPT || ' es '||NOM_EMP); 
+END; 
+
+
+SELECT *
+FROM ALUMNOS;
+
+set serveroutput on;
+
+
+CREATE OR REPLACE PROCEDURE pSaludo2(texto VARCHAR2, algo integer)
+IS
+ V_ANTES_TEXTO VARCHAR2(10);
+ 
+    
+BEGIN
+    if algo = 0 then 
+      V_ANTES_TEXTO := 'HOLA ';
+    else
+      V_ANTES_TEXTO := 'ADIOS ';
+    end if;
+
+    dbms_output.put_line(V_ANTES_TEXTO||texto);
+END;
+
+
+
+BEGIN 
+    pSaludo ('JUAN',1);
+END; 
+
+DROP PROCEDURE PSALUDO2;
+
+<<<<<<<<<<<<<<<clase 7>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set serveroutput on;
+
+
+CREATE OR REPLACE PROCEDURE pSaludo2(texto VARCHAR2, algo integer)
+IS
+ V_ANTES_TEXTO VARCHAR2(10);
+ 
+    
+BEGIN
+    if algo = 0 then 
+      V_ANTES_TEXTO := 'HOLA ';
+    else
+      V_ANTES_TEXTO := 'ADIOS ';
+    end if;
+
+    dbms_output.put_line(V_ANTES_TEXTO||texto);
+END;
+
+
+
+BEGIN 
+    pSaludo ('JUAN',1);
+END; 
+
+DROP PROCEDURE PSALUDO2;
+
+
+select * from alumnos;
+--- PROCEDMIENTO DE BORRADO
+CREATE OR REPLACE PROCEDURE spBorradoAlumno(p_codigo alumnos.codigo%type)
+IS
+  
+BEGIN
+    delete from alumnos 
+    where codigo = p_codigo;
+END;
+
+Begin 
+    spBorradoAlumno(8);
+end;
+
+
+CREATE OR REPLACE PROCEDURE spInsertarAlumno
+    (p_codigo alumnos.codigo%type,
+     p_nombre alumnos.nombre%type,
+     p_ape alumnos.apellidos%type,
+     p_fecnac alumnos.fecnac%type,
+     p_curso alumnos.curso%type,
+     p_sexo alumnos.sexo%type)
+IS
+  v_edad alumnos.edad%type;
+BEGIN
+
+    v_edad := trunc(months_between(sysdate,p_fecnac)/12);
+    
+    
+    INSERT INTO alumnos (
+        codigo,
+        nombre,
+        apellidos,
+        fecnac,
+        curso,
+        sexo,
+        edad
+    ) VALUES (
+      p_codigo, 
+      p_nombre,
+      p_ape,
+      p_fecnac,
+      p_curso,
+      p_sexo,
+      v_edad
+    );
+
+END;
+
+begin
+
+spInsertarAlumno(169,'IRENE', 'SANCHEZ RUANO',TO_DATE('27041992','DDMMYYYY'),'1DAW','M');
+
+
+end;
+
+--- FUNCIONES
+CREATE OR REPLACE FUNCTION fCuadrado (x  NUMBER)
+RETURN NUMBER
+IS
+BEGIN
+    RETURN x*x;
+END;
+
+DROP FUNCTION fCuadrado;
+
+begin
+ dbms_output.put_line(fCuadrado(6));
+end;
+
+-- Otra forma de ejecutar la función es utilizar dual
+select fCuadrado(6)
+from dual;
+
+select codigo, nombre, fCuadrado(codigo)
+from alumnos;
+
+
+-- Funcion EdadReal
+CREATE OR REPLACE FUNCTION fEdadReal (p_fecnac date)
+RETURN integer
+IS
+    v_edad integer;
+BEGIN
+    if p_fecnac >= sysdate then
+        v_edad := -1;
+    else
+        v_edad := trunc(months_between(sysdate,p_fecnac)/12);
+    end if;   
+    
+    RETURN v_edad;
+END;
+
+select fEdadReal(TO_DATE('27041992','DDMMYYYY'))
+from dual;
+
+select nombre, fecnac, edad,fEdadReal(fecnac) as edadreal
+from alumnos;
+
+select nombre, fecnac, edad,fEdadReal(fecnac) as edadreal
+from alumnos
+where fEdadReal(fecnac) = 23;
+
+-----
+
+create or replace FUNCTION concatTextos(p_parteuno VARCHAR2, p_partedos VARCHAR2)
+return VARCHAR2
+is
+  v_nombreEntero VARCHAR2(50);
+begin
+
+    v_nombreEntero := UPPER(p_parteuno ||' '|| p_partedos);
+    return v_nombreEntero;
+end;
+
+
+select nombre, apellidos,lower(concatTextos(nombre ,apellidos))
+from alumnos;
+
+create or replace FUNCTION quitarAcento(p_palabra VARCHAR2)
+return VARCHAR2
+is
+begin
+
+    return (translate(UPPER(p_palabra),'ÁÉÍÓÚ','AEIOU'));
+
+end;
+
+--BUSCAR ALUMNO CUYO NOMBRE CONTENGA UNA I
+SELECT *
+FROM ALUMNOS
+WHERE UPPER(NOMBRE) LIKE '%I%' OR UPPER(NOMBRE) LIKE '%Í%';
+
+SELECT * FROM ALUMNOS
+WHERE quitarAcento(NOMBRE) LIKE '%I%';
+
+<<<<<<<<<<<<<clase 8>>>>>>>>>>>>>>>>>>>>>>>>>
+DECLARE
+    CURSOR C_NOMBRES IS
+            SELECT NOMBRE,CURSO
+            FROM ALUMNOS
+            ORDER BY CODIGO DESC;
+            
+    V_NOMBRE ALUMNOS.NOMBRE%TYPE;
+    V_CURSO ALUMNOS.CURSO%TYPE;
+    
+BEGIN
+
+OPEN C_NOMBRES;
+
+LOOP
+    FETCH C_NOMBRES INTO V_NOMBRE,V_CURSO;
+    EXIT WHEN C_NOMBRES%NOTFOUND;
+    dbms_output.put_line('EL ALUMNO  '||V_NOMBRE||' ESTA EN EL CURSO '||V_CURSO);
+
+END LOOP;
+
+CLOSE C_NOMBRES;
+
+END;
+
+ SELECT NOMBRE,CURSO
+            FROM ALUMNOS
+            ORDER BY CODIGO DESC;
+
+
+/**************/
+
+/MOSTAR POR PANTALLA, CADA UNO DE LOS DEPARTAMENTOS CON EL NOMBRE Y CUANTO GANA EL EMPLEADO QUE MAS COBRA CON SUS DATOS DE COBRO/
+--EJEMPLO: 10 ACCOUNTIG NEW YORK KING 5000 0 PRESIDENT
+
+<<<<<<<<<<<<<<clase 9>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+DECLARE
+
+     CURSOR C_DEPT IS
+            SELECT DEPTNO, DNAME, LOC
+            FROM DEPT
+            WHERE DEPTNO IN (10,20,30);
+            
+     V_CODEPT DEPT.DEPTNO%TYPE;
+     V_DNAME DEPT.DNAME%TYPE;
+     V_LOC DEPT.LOC%TYPE;
+     
+     V_ENAME EMP.ENAME%TYPE;
+     V_SAL EMP.SAL%TYPE;
+     V_COMM EMP.COMM%TYPE;
+     V_TRABAJO EMP.JOB%TYPE;
+
+
+BEGIN
+
+OPEN C_DEPT;
+
+LOOP
+    FETCH C_DEPT INTO V_CODEPT,V_DNAME,V_LOC;
+    EXIT WHEN C_DEPT%NOTFOUND;
+    
+    -- PARA CADA CODIGO DE DEPARTAMENTO CALCULO EL NOTA QUE COBRA MAS CON SUS DATOS.
+    SELECT ENAME, SAL, COMM,JOB INTO V_ENAME, V_SAL, V_COMM, V_TRABAJO
+    FROM EMP
+    WHERE SAL = (SELECT MAX(SAL) FROM EMP WHERE DEPTNO = V_CODEPT)
+    AND DEPTNO = V_CODEPT
+    AND ROWNUM =1;
+
+    dbms_output.put_line(V_CODEPT||' '||V_DNAME||' '||V_LOC||' '||V_ENAME||' '||V_SAL||' '||V_COMM||' '||V_TRABAJO);
+
+END LOOP;
+
+CLOSE C_DEPT;
+END;
+
+/**************************************/
+DECLARE
+
+     CURSOR C_DEPT IS
+            SELECT *
+            FROM DEPT
+            WHERE DEPTNO IN (10,20,30);
+            
+     V_REG_DEPT DEPT%ROWTYPE;
+     
+     V_REG_EMP EMP%ROWTYPE;
+
+
+BEGIN
+
+OPEN C_DEPT;
+
+LOOP
+    FETCH C_DEPT INTO V_REG_DEPT;
+    EXIT WHEN C_DEPT%NOTFOUND;
+    
+    -- PARA CADA CODIGO DE DEPARTAMENTO CALCULO EL NOTA QUE COBRA MAS CON SUS DATOS.
+    SELECT * INTO V_REG_EMP
+    FROM EMP
+    WHERE SAL = (SELECT MAX(SAL) FROM EMP WHERE DEPTNO = V_REG_DEPT.DEPTNO)
+    AND DEPTNO = V_REG_DEPT.DEPTNO
+    AND ROWNUM =1;
+
+    dbms_output.put_line(V_REG_DEPT.DEPTNO||' '||V_REG_DEPT.DNAME||' '||V_REG_DEPT.LOC
+                         ||' '||V_REG_EMP.ENAME||' '||V_REG_EMP.SAL||' '||V_REG_EMP.COMM||' '||V_REG_EMP.JOB);
+
+END LOOP;
+
+CLOSE C_DEPT;
+END;
+
+<<<<<<<<<<<<<<clase 10>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set serveroutput on;
+/*********
+--BLOQUES ANÓNIMOS
+
+DECLARE
+    -PARTE DECLARATIVA
+    VARIABLE Y TIPOS Y CURSORES Y EXCEPCIONES, ETC.
+
+BEGIN
+PARTE EJECUTABLE
+
+END;
+
+---
+PROCEDMINTOS Y FUNCIONES.
+CREATE OR REPLACE (PROCEDURE/FUNCTION) NOMBRE (PARAMENTROS)
+ENE EL CASO DE FUNCION RETURN
+IS
+    -PARTE DECLARATIVA
+    VARIABLE Y TIPOS Y CURSORES Y EXCEPCIONES, ETC.
+
+BEGIN
+PARTE EJECUTABLE
+
+END NOMBRE;
+
+CURSORES.
+
+EXCEPCIONES, TYPE, CURSORES CON PARAMETRO Y PAQUETES.
+
+*/
+
+CREATE OR REPLACE FUNCTION fDivision
+     (p_numerador number, p_denominador number)
+return number
+is 
+    v_division number;
+begin
+
+ 
+    v_division := (p_numerador/p_denominador);
+
+    return v_division;
+
+end;
+
+--- FUNCION CON EXCEPCION
+
+CREATE OR REPLACE FUNCTION fDivision
+     (p_numerador number, p_denominador number)
+return number
+is 
+    fNombre varchar2(50) := 'fDivision';
+    v_division number;
+begin
+
+ 
+    v_division := (p_numerador/p_denominador);
+
+    return v_division;
+
+EXCEPTION
+WHEN ZERO_DIVIDE THEN 
+    dbms_output.put_line(fNombre||'--> EXISTE UNA DIVISIÓN POR CERO');
+    return 0;
+end;
+
+
+--FUNCION QUE PASEMOS UNA FECHA, NUMERO DE AÑOS Y SUMAR ESA CANTIDAD DE AÑOS A LA FECHA
+CREATE OR REPLACE FUNCTION fSumaAnhos( p_fecha date, p_numero integer)
+return date
+is
+    v_anho integer;
+     v_anho_nuevo integer;
+     v_fecha_nueva date;
+begin
+
+    return (add_months(p_fecha, 12*p_numero));
+    /*
+    v_anho := to_number(to_char(p_fecha,'yyyy'));
+    v_anho_nuevo := v_anho + p_numero;
+    
+    v_fecha_nueva := to_date(to_char(p_fecha,'dd/mm')||'/'||to_char(v_anho_nuevo),'dd/mm/yyyy');
+    
+    
+    return v_fecha_nueva;
+*/
+end;
+
+
+
+SELECT fSumaAnhos(to_date('01/06/2009','dd/mm/yyyy'),2)
+FROM DUAL;
+
+
+begin
+
+dbms_output.put_line(fDivision(3,6));
+end;
+
+
+DROP FUNCTION f_division;
+
+SELECT fDivision(3,0)
+FROM DUAL;
+
+<<<<<<<<<<<<<<clase 11>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+create or replace PROCEDURE spMostrarTexto(p_irene IN out VARCHAR2)
+IS
+BEGIN
+
+   p_irene := 'HOLA QUE TAL';
+   --DBMS_OUTPUT. PUT_LINE ('EL TEXTO POR PARAMETRO ES '||p_irene);
+
+END;
+
+--
+declare 
+
+    v_texto varchar2(50):= 'sergio ven más';
+
+BEGIN
+
+    DBMS_OUTPUT. PUT_LINE ('PRIMERA '||v_texto);
+
+    spMostrarTexto(v_texto);
+    
+    DBMS_OUTPUT. PUT_LINE ('SEGUNDA '||v_texto);
+    
+END;
+
+-- INSERTAR ALUMNO
+create or replace  PROCEDURE spInsertarAlumnoDevCodigo
+    (p_codigo IN out alumnos.codigo%type,
+     p_nombre alumnos.nombre%type,
+     p_ape alumnos.apellidos%type,
+     p_fecnac alumnos.fecnac%type,
+     p_curso alumnos.curso%type,
+     p_sexo alumnos.sexo%type)
+IS
+  v_edad alumnos.edad%type;
+BEGIN
+
+    v_edad := trunc(months_between(sysdate,p_fecnac)/12);
+    
+    select max(codigo) +1 into p_codigo from alumnos;
+    
+
+    INSERT INTO alumnos (
+        codigo,
+        nombre,
+        apellidos,
+        fecnac,
+        curso,
+        sexo,
+        edad
+    ) VALUES (
+      p_codigo, 
+      p_nombre,
+      p_ape,
+      p_fecnac,
+      p_curso,
+      p_sexo,
+      v_edad
+    );
+
+END;
+
+
+declare
+
+    v_codalu alumnos.codigo%type;
+    
+begin
+
+spInsertarAlumnoDevCodigo(v_codalu,'ELVIS2','COSTELLO',TO_DATE('28/12/1996','DD/MM/YYYY'),'1DAW','H');
+
+DBMS_OUTPUT. PUT_LINE ('EL ALUMNO ELVIS HA SIDO REGISTRADO CON EL CODIGO '||V_CODALU);
+
+
+end;
+
+
+SELECT * FROM ALUMNOS
+ORDER BY 1 DESC;
+-- CREAR UN PROCEDIMIENTO QUE PERMITA INSERTAR UN DEPARTAMENTO Y QUE DESPUES DE INSERTAR TE DEVUELVA EL CODIGO DE ESTE. DICHO CODIGO DE DEPARTAMENTO TIENE QUE SER EL SIGUIENTE MULTIPLO DE 10 SUPERIOR AL ULTIMO DADO
+
+
+create or replace  PROCEDURE spInsertarDeptDevCodigo
+    (p_codigo out dept.deptno%type,
+     p_nombre dept.dname%type,
+     p_loc dept.loc%type)
+IS
+  v_codigo_mas_10 dept.deptno%type;
+BEGIN
+
+-- calcular el codigo con el que voy a insertar
+select max(deptno)+10 
+    into v_codigo_mas_10
+from dept;
+
+--p_codigo := v_codigo_mas_10 - mod(v_codigo_mas_10,10);
+p_codigo := trunc(v_codigo_mas_10/10,0) * 10;
+
+--insertar
+INSERT INTO dept (
+    deptno,
+    dname,
+    loc
+) VALUES (
+    p_codigo,
+    p_nombre,
+    p_loc
+);
+
+--fin
+end;
+
+declare
+
+    v_dept dept.deptno%type;
+    
+begin
+
+spInsertarDeptDevCodigo(v_dept,'DAW2','SEVILLA2');
+
+DBMS_OUTPUT. PUT_LINE ('EL DEPT EN SEVILLA2 HA SIDO REGISTRADO CON EL CODIGO '||v_dept);
+
+
+end;
+
+
+INSERT INTO DEPT VALUES (52,'CASA', 'MADRID');
+
+----
+CREATE OR REPLACE FUNCTION fDivisionTuneada
+     (p_numerador number, p_denominador number)
+return number
+is 
+    fNombre varchar2(50) := 'fDivisionTuneada';
+    v_division number;
+    V_TEXTO VARCHAR2(50);
+begin
+
+    v_texto := to_number('NELSON');-- HAY UN ERROR
+    v_division := (p_numerador/p_denominador);
+
+    return v_division;
+
+EXCEPTION
+WHEN ZERO_DIVIDE THEN 
+    dbms_output.put_line(fNombre||'--> EXISTE UNA DIVISIÓN POR CERO');
+    return 0;
+
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    RETURN -1;
+end;
+
+
+select fDivisionTuneada(12,0)
+from dual;
+
+
+
+begin
+ dbms_output.put_line('HOLA LUIS');
+ 
+ dbms_output.put_line(fDivisionTuneada(12,0));
+ 
+ dbms_output.put_line('ADIOS LUIS');
+ 
+end;
+
+
+<<<<<<<<<<<<<<clase 12>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set serveroutput on;
+
+
+
+
+DECLARE
+    VALOR_NEGATIVO_para_elvis EXCEPTION;
+    VALOR2 EXCEPTION;
+    valor NUMBER;
+BEGIN
+    valor := -1;
+    IF valor < 0 THEN
+     RAISE VALOR_NEGATIVO_para_elvis;
+    END IF;
+    
+    
+    dbms_output.put_line('Esto no sale Iván');
+    /*
+    begin
+        
+        
+        valor:=1;
+        raise valor2;
+        
+    exception
+        WHEN VALOR_NEGATIVO_para_elvis THEN
+            dbms_output.put_line('El valor no puede ser negativo');
+    end;
+    */
+    
+    
+EXCEPTION
+WHEN VALOR_NEGATIVO_para_elvis THEN
+    dbms_output.put_line('El valor no puede ser negativo');
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+END;
+
+
+/*
+lista de correos
+
+for correo in listacorreos
+loop
+    begin
+        enviarcorreo(correo)
+     exception
+        when error
+            enviasms
+    end;
+end loop;
+*/
+
+
+DECLARE
+    V_NOMBRE VARCHAR2(50);
+    V_APE ALUMNOS.APELLIDOS%TYPE;
+BEGIN
+    SELECT NOMBRE, APELLIDOS INTO V_NOMBRE,V_APE
+    FROM ALUMNOS
+    WHERE CODIGO = 1;
+   
+    DBMS_OUTPUT.PUT_LINE( 'EL NOMBRE DEL   ESTUDIANTE ES: ' || V_NOMBRE || ' ' ||V_APE);
+END;
+/
+
+DECLARE
+    V_REG_ALUMNOS ALUMNOS%ROWTYPE;
+   
+BEGIN
+    SELECT * INTO V_REG_ALUMNOS
+    FROM ALUMNOS
+    WHERE CODIGO = 1;
+   
+    DBMS_OUTPUT.PUT_LINE( 'EL NOMBRE DEL   ESTUDIANTE ES: ' || V_REG_ALUMNOS.NOMBRE || ' ' ||V_REG_ALUMNOS.APELLIDOS);
+END;
+
+
+DECLARE
+    V_NOMBRE VARCHAR2(50);
+    V_APE ALUMNOS.APELLIDOS%TYPE;
+BEGIN
+    SELECT NOMBRE, APELLIDOS INTO V_NOMBRE,V_APE
+    FROM ALUMNOS
+    WHERE CODIGO IN (111,112);
+   
+    DBMS_OUTPUT.PUT_LINE( 'EL NOMBRE DEL   ESTUDIANTE ES: ' || V_NOMBRE || ' ' ||V_APE);
+EXCEPTION    
+
+WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Killo no hay gente ');    
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+END;
+/
+
+--cursores explicitos
+DECLARE
+
+    CURSOR C_NOMBRES IS
+        SELECT NOMBRE,APELLIDOS
+        FROM ALUMNOS;
+        
+    V_NOMBRE ALUMNOS.NOMBRE%TYPE;
+    V_APE ALUMNOS.APELLIDOS%TYPE;
+    
+   
+BEGIN
+
+    OPEN C_NOMBRES;
+    
+    LOOP
+        FETCH C_NOMBRES INTO V_NOMBRE,V_APE;
+        EXIT WHEN C_NOMBRES%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE( 'EL NOMBRE ES: ' || V_NOMBRE || ' ' ||V_APE);
+    END LOOP;
+    
+    CLOSE C_NOMBRES;
+
+END;
+
+--- OBTENER CUANDO SE HA GASTADO CADA DEPARTAMENTO EN SUELDOS, TENIENDO EN CUENTA LA COMISIÓN, QUE SI NO TIENE ES CERO
+--- MOSTRAR UNA LINEA POR CADA DEPARTAMENTO CON SU NOMBRE Y SU GASTO EN SUELDO
+--- EJEMPLO: EL DEPARTAMENTO ACCOUNTING SE HA GASTADO EN SUELDO 7500 EUROS.
+--- SE DEBE REALIZAR DE 2 FORMAS,  UNA VEZ CON UN CURSO EXPLICITO E ITERANDO POR EMPLEADO Y OTRA VEZ CON  UN CURSOR IMPLICITO.
+
+DECLARE
+    V_IMPLICITO NUMBER;
+    v_coddept dept.deptno%type :=&CODIGO_DEPT;
+BEGIN
+   
+    SELECT nvl(SUM(E.SAL+NVL(E.COMM,0)),0) AS GASTOSUELDO INTO V_IMPLICITO 
+    FROM EMP E
+    WHERE E.DEPTNO=v_coddept;
+    
+    DBMS_OUTPUT.PUT_LINE(V_IMPLICITO);
+EXCEPTION
+
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+
+DECLARE
+
+    CURSOR C_SALARIO IS         
+        SELECT ENAME,E.SAL+NVL(E.COMM,0)  
+        FROM EMP E;
+    
+    V_SALARIO NUMBER;
+    V_NOMBRE EMP.ENAME%TYPE;
+    
+    V_SALARIO_TOTAL NUMBER:=0;
+    
+BEGIN
+   
+   
+    OPEN C_SALARIO;
+    LOOP
+        FETCH C_SALARIO INTO V_NOMBRE,V_SALARIO;
+        EXIT WHEN C_SALARIO%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(V_NOMBRE||' COBRA '||V_SALARIO);
+        V_SALARIO_TOTAL :=  V_SALARIO_TOTAL +V_SALARIO;
+         
+    END LOOP;
+       
+    CLOSE C_SALARIO;
+    DBMS_OUTPUT.PUT_LINE('EL TOTAL ES '||V_SALARIO_TOTAL);
+    
+EXCEPTION
+
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    
+    
+END;
+
+
+<<<<<<<<<<<<<<clase 13>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+CREATE OR REPLACE FUNCTION F_SALARIO_DEPT(P_CODDEPT IN DEPT.DEPTNO%TYPE)
+RETURN NUMBER
+IS
+    V_SAL_DEPT NUMBER;
+    V_CODIGO_DEPT DEPT.DEPTNO%TYPE;
+    
+    
+BEGIN
+
+    SELECT DEPTNO INTO V_CODIGO_DEPT
+    FROM DEPT
+    WHERE DEPTNO  = P_CODDEPT;
+
+    SELECT NVL(SUM(SAL+NVL(COMM,0)),0) INTO V_SAL_DEPT
+    FROM EMP
+    WHERE DEPTNO = P_CODDEPT;
+    
+    RETURN V_SAL_DEPT;
+    
+    
+EXCEPTION
+
+WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('El codigo ' ||p_coddept ||' no es código de ningún departamento ');    
+    RETURN -1;
+
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    RETURN -1;
+
+    
+END;
+
+
+BEGIN
+ DBMS_OUTPUT.PUT_LINE(F_SALARIO_DEPT(11));   
+END;
+
+SELECT F_SALARIO_DEPT(11)
+FROM DUAL;
+
+
+
+--bloque anónimo
+declare
+begin
+exception
+end;
+
+create or replace function/procedure nombre(paramentros[..])
+is
+begin
+exception
+end;
+-- UTILIZANDO LA FUNCIÓN ANTERIOR REALIZAR UN BLOQUE ANÓNIMO QUE MUESTRE POR PANTALLA
+-- EL NOMBRE DEL DEPARTAMENTO Y CUANDO SE HA GASTADO PARA TODOS ELLOS.
+DECLARE
+
+ CURSOR C_SAL_DEPT IS 
+    SELECT DEPTNO, DNAME
+    FROM DEPT;
+  
+  V_COD DEPT.DEPTNO%TYPE;
+  V_NOMBRE DEPT.DNAME%TYPE;
+  
+  V_SALARIO NUMBER;
+  
+
+BEGIN
+    OPEN C_SAL_DEPT;
+    LOOP
+        FETCH C_SAL_DEPT INTO V_COD, V_NOMBRE;
+        EXIT WHEN C_SAL_DEPT%NOTFOUND;
+        
+        V_SALARIO := F_SALARIO_DEPT(V_COD);
+         DBMS_OUTPUT.PUT_LINE('EL DEPARTAMENTO ' ||V_NOMBRE ||' HA GASTADO EN SALARIO ' || V_SALARIO);    
+        
+    END LOOP;   
+    CLOSE C_SAL_DEPT;
+
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    
+END;
+
+-- SE PUEDE MEJORAR
+DECLARE
+
+ CURSOR C_SAL_DEPT IS 
+    SELECT DNAME,F_SALARIO_DEPT(DEPTNO)
+    FROM DEPT;
+  
+  V_NOMBRE DEPT.DNAME%TYPE;
+  V_SALARIO NUMBER;
+  
+
+BEGIN
+    OPEN C_SAL_DEPT;
+    LOOP
+        FETCH C_SAL_DEPT INTO V_NOMBRE, V_SALARIO;
+        EXIT WHEN C_SAL_DEPT%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('EL DEPARTAMENTO ' ||V_NOMBRE ||' HA GASTADO EN SALARIO ' || V_SALARIO);    
+        
+    END LOOP;   
+    CLOSE C_SAL_DEPT;
+
+
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    
+
+
+<<<<<<<<<<<<<<clase 14>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+-- Crear una funcion F_QUIEN_ES_MI_JEFE que reciba un nombre de empleado y nos devuelva el nombre del jefe directo
+-- de ese empleado. Controlar todas las excepciones posibles.
+CREATE OR REPLACE FUNCTION F_QUIEN_ES_MI_JEFE(P_NOM_EMP IN EMP.ENAME%TYPE)
+RETURN VARCHAR2
+IS
+   V_NOM_JEFE EMP.ENAME%TYPE;
+    
+BEGIN
+
+    SELECT J.ENAME INTO V_NOM_JEFE
+    FROM EMP E, EMP J
+    WHERE E.MGR = J.EMPNO
+    AND UPPER(E.ENAME) = UPPER(P_NOM_EMP);
+   
+    
+    RETURN V_NOM_JEFE;
+    
+    
+EXCEPTION
+
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    RETURN SQLERRM;
+
+    
+END;
+
+
+SELECT J.ENAME
+    FROM EMP E, EMP J
+    WHERE E.MGR = J.EMPNO
+    AND UPPER(E.ENAME) = UPPER('KING');
+
+BEGIN
+ DBMS_OUTPUT.PUT_LINE(F_QUIEN_ES_MI_JEFE('king'));    
+END;
+
+
+-- Crear un procedimiento que muestre el nombre de todos los departamentos y el
+-- número de empleados que tiene (incluso si no tiene empleados).
+
+--Crear una función que obtenga el factorial de un número pasado como parámetro.--
+
+
+/*
+Diseñar una función llamada f_esPrimo que reciba como argumento
+un número entero y devuelva verdadero o falso según el caso. (Un número es
+primo si solo es divisible por 1 y por el mismo. Un número es divisible por otro si el
+resto de la división es 0)
+*/
+-- Crear un procedimiento que despida (borre) al empleado más novel de cada departamento.
+create or replace PROCEDURE spBorrarNovel
+IS
+
+ CURSOR C_DEP IS 
+    SELECT DEPTNO,MAX(HIREDATE)
+    FROM EMP
+    GROUP BY DEPTNO;
+
+    V_DEPTNO EMP.DEPTNO%TYPE;
+    V_MAX_FEC DATE;
+    
+
+BEGIN
+
+    OPEN C_DEP;
+    LOOP
+        FETCH C_DEP INTO V_DEPTNO,V_MAX_FEC;
+        EXIT WHEN C_DEP%NOTFOUND;
+        
+        DELETE FROM EMP
+        WHERE DEPTNO = V_DEPTNO
+        AND HIREDATE = V_MAX_FEC;
+        
+    END LOOP;
+    CLOSE C_DEP;
+    
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    
+
+END;
+
+SELECT *
+FROM EMP
+ORDER BY HIREDATE DESC;
+
+BEGIN 
+spBorrarNovel;
+END;
+
+-- Crear un procedimiento que muestre el nombre de todos los departamentos y el
+-- número de empleados que tiene (incluso si no tiene empleados).
+create or replace PROCEDURE spBorrarNovel21(P_coddept emp.deptno%type)
+IS
+
+ CURSOR C_DEP IS 
+    SELECT DEPTNO,MAX(HIREDATE)
+    FROM EMP
+    GROUP BY DEPTNO;
+
+    V_DEPTNO EMP.DEPTNO%TYPE;
+    V_MAX_FEC DATE;
+    
+
+BEGIN
+
+    OPEN C_DEP;
+    LOOP
+        FETCH C_DEP INTO V_DEPTNO,V_MAX_FEC;
+        EXIT WHEN C_DEP%NOTFOUND;
+        
+        if v_deptno = p_coddept or p_coddept is null then        
+            DELETE FROM EMP
+            WHERE DEPTNO = V_DEPTNO
+            AND HIREDATE = V_MAX_FEC;
+        end if;
+        
+    END LOOP;
+    CLOSE C_DEP;
+    
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    
+
+END;
+
+create or replace PROCEDURE spBorrarNovel22(P_coddept emp.deptno%type)
+IS
+
+ CURSOR C_DEP IS 
+    SELECT DEPTNO,MAX(HIREDATE)
+    FROM EMP
+    where deptno = nvl(p_coddept,deptno)
+    GROUP BY DEPTNO;
+
+    V_DEPTNO EMP.DEPTNO%TYPE;
+    V_MAX_FEC DATE;
+BEGIN
+
+    OPEN C_DEP;
+    LOOP
+        FETCH C_DEP INTO V_DEPTNO,V_MAX_FEC;
+        EXIT WHEN C_DEP%NOTFOUND;
+        
+        DELETE FROM EMP
+        WHERE DEPTNO = V_DEPTNO
+        AND HIREDATE = V_MAX_FEC;
+        
+    END LOOP;
+    CLOSE C_DEP;
+    
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    
+
+END;
+
+--- EJERCICIO PARA HACER: Realizar el anterior ejercicio sin utilizar cursores sólo un delete en el begin
+-- Crear un procedimiento que muestre el nombre de todos los departamentos y el
+-- número de empleados que tiene (incluso si no tiene empleados).
+
+CREATE OR REPLACE PROCEDURE SP_DEPT_NUM
+IS
+    CURSOR C_DEPT_NUM IS
+        SELECT D.DNAME, NVL(COUNT(E.EMPNO),0)
+        FROM DEPT D, EMP E
+        WHERE D.DEPTNO = E.DEPTNO(+)
+        GROUP BY D.DNAME;
+    
+    V_NOM DEPT.DNAME%TYPE;
+    V_EMPS NUMBER;
+
+BEGIN
+
+    OPEN C_DEPT_NUM;
+    LOOP
+        FETCH C_DEPT_NUM INTO V_NOM, V_EMPS;
+        EXIT WHEN C_DEPT_NUM%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('EL DEPT '||V_NOM||' TIENE '||V_EMPS||  ' EMPLEADOS');
+    END LOOP;
+    CLOSE C_DEPT_NUM;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);
+END;
+
+CREATE OR REPLACE PROCEDURE SP_DEPT_NUM2
+IS
+    CURSOR C_DEPT_NUM IS
+        SELECT D.DEPTNO,D.DNAME
+        FROM DEPT D;
+        
+    V_DEPTNO DEPT.DEPTNO%TYPE;
+    V_NOM DEPT.DNAME%TYPE;
+    V_EMPS NUMBER;
+
+BEGIN
+
+    OPEN C_DEPT_NUM;
+    LOOP
+        FETCH C_DEPT_NUM INTO V_DEPTNO,V_NOM;
+        EXIT WHEN C_DEPT_NUM%NOTFOUND;
+        
+        -- PARA CADA CODIGO DE DEPARTAMENTO, VOY Y CUENTO LOS EMPLEADOS
+        SELECT NVL(COUNT(E.EMPNO),0) INTO V_EMPS
+        FROM EMP
+        WHERE DEPTNO  = V_DEPTNO;
+        
+        DBMS_OUTPUT.PUT_LINE('EL DEPT '||V_NOM||' TIENE '||V_EMPS||  ' EMPLEADOS');
+    END LOOP;
+    CLOSE C_DEPT_NUM;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);
+END;
+
+Escribir un programa que visualice el apellido y el salario de los cinco empleados que
+tienen el salario más alto.
+
+DECLARE
+
+    CURSOR C_EMP IS
+        SELECT ENAME, SAL FROM EMP
+        ORDER BY SAL DESC;
+        
+    V_NOMBRE EMP.ENAME%TYPE;
+    V_SALARIO EMP.SAL%TYPE;
+    contador integer :=0;
+
+
+BEGIN
+
+    OPEN C_EMP;
+    LOOP
+        FETCH C_EMP INTO V_NOMBRE, V_SALARIO;
+        EXIT WHEN C_EMP%NOTFOUND;
+        
+        contador := contador+1;
+        
+        if contador = 5 then
+            exit;
+         end if;   
+        DBMS_OUTPUT.PUT_LINE('EMPLEADO -> '|| V_NOMBRE || ' COBRA: ' || V_SALARIO);    
+        
+    END LOOP;
+    CLOSE C_EMP;
+    
+exception
+when others then
+    DBMS_OUTPUT.PUT_LINE('Ocurrio el error' || SQLCODE || '--- mensaje:');
+end;
+
+--8. Codificar un procedimiento que reciba una lista de hasta 5 números y visualice su suma.
+set serveroutput on;
+
+DECLARE
+
+TYPE tdireccion 
+IS RECORD(
+    calle VARCHAR2(50),
+    numero INTEGER(4)   
+    );
+
+TYPE tDirecciones IS TABLE OF tdireccion INDEX BY BINARY_INTEGER;
+
+tablaDire tDirecciones;
+
+BEGIN
+    tablaDire(1).calle := 'Huelva';
+    tablaDire(1).calle:= 8;
+END;
+
+-- crear un procedimiento que inserte un empleado, y si el empleado existe (codigo de empleado el mismo)
+-- que actualice todos sus campos.
+
+
+-- crear función que dado un nombre de empleado, me devuelva el nombre de su jefe.
+-- controlar todas las excepciones necesarias
+create or replace function f_nombre_jefe(p_nom_emp emp.ename%type)
+return varchar2
+is
+    v_nom_jefe emp.ename%type;
+begin
+
+    select NVL(j.ename,'NO TENGO JEFE') into v_nom_jefe
+    from emp e, emp j
+    where e.mgr = j.empno(+)
+    AND upper(e.ename) = upper(p_nom_emp);
+    
+    return v_nom_jefe;
+
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+    return 'NO SOY UN EMPLEADO';
+
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    return 'ERROR';
+END;   
+
+--
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(f_nombre_jefe('CLARK'));    
+    DBMS_OUTPUT.PUT_LINE(f_nombre_jefe('KING'));    
+    DBMS_OUTPUT.PUT_LINE(f_nombre_jefe('NELSON'));    
+END;
+
+
+create or replace function f_nombre_jefe(p_nom_emp emp.ename%type)
+return varchar2
+is
+    V_COD_JEFE EMP.EMPNO%TYPE;
+    v_nom_jefe emp.ename%type;
+begin
+
+    SELECT MGR INTO V_CODJEFE
+    FROM EMP
+    WHERE upper(e.ename) = upper(p_nom_emp);
+
+    select NVL(ename,'NO TENGO JEFE') into v_nom_jefe
+    from emp 
+    where empno = V_COD_JEFE;
+    
+    return v_nom_jefe;
+
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+    return 'NO SOY UN EMPLEADO';
+
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    return 'ERROR';
+END;   
+
+--
+BEGIN
+
+    DBMS_OUTPUT.PUT_LINE(f_nombre_jefe('CLARK'));    
+    DBMS_OUTPUT.PUT_LINE(f_nombre_jefe('KING'));    
+    DBMS_OUTPUT.PUT_LINE(f_nombre_jefe('NELSON'));    
+
+END;
+
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE spINSERTAR_EMP_LUIS
+(V_EMPNO EMP.EMPNO%TYPE, V_ENAME EMP.ENAME%TYPE,V_JOB EMP.JOB%TYPE,V_MGR EMP.MGR%TYPE,
+ V_HIREDATE EMP.HIREDATE%TYPE,V_SAL EMP.SAL%TYPE,V_DEPNO EMP.DEPTNO%TYPE)
+IS
+BEGIN
+    DELETE FROM EMP WHERE EMPNO=V_EMPNO;
+    
+    INSERT INTO EMP(EMPNO,ENAME,JOB,MGR,HIREDATE,SAL,DEPTNO)
+    VALUES (V_EMPNO,V_ENAME,V_JOB,V_MGR,V_HIREDATE,V_SAL,V_DEPNO);
+
+exception
+when others then
+    DBMS_OUTPUT.PUT_LINE('Ocurrio el error' || SQLCODE || '--- mensaje:');
+end;
+
+
+
+BEGIN
+
+    spINSERTAR_EMP(169,'LUIS','MANAGER',7839,TO_DATE('01/01/2000','DD/MM/YYYY'),3200,10);   
+
+END;
+
+
+
+SELECT *
+FROM EMP;
+
+CREATE OR REPLACE PROCEDURE spINSERTAR_EMP_UPDATE
+(V_EMPNO EMP.EMPNO%TYPE, V_ENAME EMP.ENAME%TYPE,V_JOB EMP.JOB%TYPE,V_MGR EMP.MGR%TYPE,
+ V_HIREDATE EMP.HIREDATE%TYPE,V_SAL EMP.SAL%TYPE,V_DEPNO EMP.DEPTNO%TYPE)
+IS
+BEGIN
+        
+    INSERT INTO EMP(EMPNO,ENAME,JOB,MGR,HIREDATE,SAL,DEPTNO)
+    VALUES (V_EMPNO,V_ENAME,V_JOB,V_MGR,V_HIREDATE,V_SAL,V_DEPNO);
+
+exception
+WHEN DUP_VAL_ON_INDEX THEN
+
+UPDATE EMP
+SET ENAME = V_ENAME--HABRÍA QUE PONER TODOS.
+WHERE EMPNO = V_EMPNO;
+
+
+when others then
+  DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);   
+end;
+
+BEGIN
+
+    spINSERTAR_EMP_UPDATE(169,'LUIS','MANAGER',7839,TO_DATE('01/01/2000','DD/MM/YYYY'),3200,10);   
+
+END;
+
+SELECT *
+FROM EMP;
+
+set serveroutput on;
+-- Crea una procedimiento que reciba como parámetro el número de un departamento 
+-- y que devuelva el salario máximo y el salario mínimo de los empleados que trabajan en él.
+-- controlar que el departamento puede que no existe
+CREATE OR REPLACE PROCEDURE spDevMinMaxSalDept(pCodDept IN dept.deptno%type, pSalMax OUT EMP.SAL%TYPE, pSalMin OUT EMP.SAL%TYPE)
+IS
+    v_nombre DEPT.Dname%type;
+BEGIN
+
+    SELECT DNAME INTO V_NOMBRE
+    FROM DEPT
+    WHERE DEPTNO = PCODDEPT;
+    
+    select nvl(max(sal),0), nvl(min(sal),0) into psalmax, psalmin
+    from emp
+    where deptno = pCodDept;
+        
+   
+    
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('EL DEPARTAMENTO NO EXISTE');    
+    pSalMAX :=-1;
+    pSalMin :=-1;
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    pSalMAX :=-1;
+    pSalMin :=-1;
+
+END; 
+--- COMO LO PROBAMOS
+
+DECLARE
+
+    V_SALMAX EMP.SAL%TYPE;
+    V_SALMIN EMP.SAL%TYPE;
+    V_CODIGO dept.deptno%type:=44;
+
+BEGIN
+    spDevMinMaxSalDept(V_CODIGO, V_SALMAX, V_SALMIN);
+    DBMS_OUTPUT.PUT_LINE('EL CODIGO '|| V_CODIGO||' TIENE SALARIO MAXIMO '|| V_SALMAX|| ' Y MINIMO '||V_SALMIN);
+END;
+
+    select max(sal), min(sal) 
+    from emp
+    where deptno = 48;
+
+
+--dados 2 numeros devolver el máximo y el minimo
+CREATE OR REPLACE PROCEDURE spDevMinMax(pNum1 number,pNum2 number,pMasGrande out number,pMasPequeno out number)
+is
+
+begin
+ if pnum1 > pnum2 then
+ 
+    pMasGrande := pnum1;
+    pMasPequeno := pnum2;
+else
+    pMasGrande := pnum2;
+    pMasPequeno := pnum1;
+end if;
+
+end;
+
+
+declare
+    v_min number;
+    v_max number;
+begin
+    spDevMinMax(8,6,v_max, v_min);
+    DBMS_OUTPUT.PUT_LINE('EL MÁXIMO ES '||V_MAX);
+    DBMS_OUTPUT.PUT_LINE('EL MÍNIMO ES '||V_MIN);
+    
+end;
+--Crea una función que reciba como parámetros el número de un departamento y una fecha, 
+-- y que devuelva el número de empleados que tenía ese departamento en esa fecha.
+-- si no tiene que devuelva cero.
+
+set serveroutput on;
+--Mostrar un listado de todos los clientes (nombre y ciudad) que no hayan hecho pagos
+DECLARE
+
+    CURSOR C_CLI_CIU IS
+        SELECT NOMBRECLIENTE, CIUDAD
+        FROM CLIENTES
+        WHERE CODIGOCLIENTE NOT IN (SELECT DISTINCT CODIGOCLIENTE FROM PAGOS);
+        
+    V_NOM CLIENTES.NOMBRECLIENTE%TYPE;
+    V_CIU CLIENTES.CIUDAD%TYPE;
+        
+
+BEGIN
+
+    OPEN C_CLI_CIU;
+    LOOP
+        FETCH C_CLI_CIU INTO V_NOM, V_CIU;
+        EXIT WHEN C_CLI_CIU%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('EL CLIENTE '||V_NOM||' DE LA CIUDAD '||V_CIU||' NO HA HECHO PAGOS'); 
+    
+    END LOOP;
+    
+    CLOSE C_CLI_CIU;
+
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+
+END; 
+
+-- Mostrar un listado de los empleados y cuanto Ha vendido a sus clientes
+DECLARE
+
+    CURSOR C_CLI_CIU IS
+        SELECT E.NOMBRE, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)
+        FROM EMPLEADOS E, CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP
+        WHERE E.CODIGOEMPLEADO = C.CODIGOEMPLEADOREPVENTAS
+        AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+        AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+        GROUP BY E.NOMBRE;
+        
+    V_NOM CLIENTES.NOMBRECLIENTE%TYPE;
+    V_GASTO NUMBER;
+        
+
+BEGIN
+
+    OPEN C_CLI_CIU;
+    LOOP
+        FETCH C_CLI_CIU INTO V_NOM, V_GASTO;
+        EXIT WHEN C_CLI_CIU%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('EL EMPLEADO '||V_NOM||' HA VENDIDO '||V_GASTO||' €'); 
+    
+    END LOOP;
+    
+    CLOSE C_CLI_CIU;
+
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+
+END; 
+
+
+
+SELECT E.NOMBRE, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)
+FROM EMPLEADOS E, CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP
+WHERE E.CODIGOEMPLEADO = C.CODIGOEMPLEADOREPVENTAS
+AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+GROUP BY E.NOMBRE;
+
+Antonio Bueno Guisado, Ayer 9:46
+--- MOSTAR LOS EMPLEADOS QUE HAYAN VENDIDO CERO TAMBIEN DEBEN SER MOSTRADOS.
+DECLARE
+
+    CURSOR C_EMP IS
+        SELECT CODIGOEMPLEADO, NOMBRE
+        FROM EMPLEADOS E;
+        
+    V_NOM EMPLEADOS.NOMBRE%TYPE;
+    V_COD EMPLEADOS.CODIGOEMPLEADO%TYPE;
+    V_GASTO NUMBER;
+        
+
+BEGIN
+
+    OPEN C_CLI_CIU;
+    LOOP
+        FETCH C_CLI_CIU INTO V_COD, V_NOM;
+        EXIT WHEN C_CLI_CIU%NOTFOUND;
+ 
+        --- AQUI PUEDE HABER MUCHO MUCHO CODIGO
+        V_GASTO := 0;
+        
+        BEGIN
+        
+            SELECT NVL(SUM(DP.CANTIDAD*DP.PRECIOUNIDAD),0) INTO V_GASTO
+            FROM EMPLEADOS E, CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP
+            WHERE C.CODIGOEMPLEADOREPVENTAS = V_COD
+            AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+            AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO;
+        EXCEPTION
+        WHEN OTHERS THEN
+                DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);
+        END;        
+
+        DBMS_OUTPUT.PUT_LINE('EL EMPLEADO '||V_NOM||' HA VENDIDO '||V_GASTO||' €'); 
+    
+    END LOOP;
+    
+    CLOSE C_CLI_CIU;
+
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+
+END;
+
+--- CURSORES PARAMERTICOS ES UN CURSOR QUE RECIBE UN PARAMENTRO
+-- EN EL EJEMPLO ANTERIOR
+-- LISTADO DE EMPLEADOS Y SUS CLIENTES ORDENADOS LOS CLIENTES POR NOMBRE
+DECLARE
+
+    CURSOR C_EMP IS
+        SELECT CODIGOEMPLEADO, NOMBRE
+        FROM EMPLEADOS E;
+        
+    CURSOR C_CLI_POR_EMP (p_codemp EMPLEADOS.CODIGOEMPLEADO%TYPE) IS
+        select nombrecliente
+        from clientes
+        where codigoempleadorepventas = p_codemp
+        ORDER BY 1;
+        
+    V_CODIGO EMPLEADOS.CODIGOEMPLEADO%TYPE;
+    V_NOMEMP EMPLEADOS.NOMBRE%TYPE;
+    V_NOMCLI CLIENTES.NOMBRECLIENTE%TYPE;
+
+BEGIN
+
+ OPEN C_EMP;
+    LOOP
+        FETCH C_EMP INTO V_CODIGO, V_NOMEMP;
+        EXIT WHEN C_EMP%NOTFOUND;
+       
+        -- PARA CADA CODIGO DE EMPLEADO RECORRO TODOS SUS CLIENTES
+        OPEN C_CLI_POR_EMP(V_CODIGO);
+          LOOP
+            FETCH C_CLI_POR_EMP INTO V_NOMCLI;
+            EXIT WHEN C_CLI_POR_EMP%NOTFOUND;
+            
+            DBMS_OUTPUT.PUT_LINE('EL EMPLEADO '||V_NOMEMP||' TIENE COMO CLIENTE A '||V_NOMCLI); 
+        
+        END LOOP;
+        CLOSE C_CLI_POR_EMP;
+ 
+    END LOOP;
+    CLOSE C_EMP;
+
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+
+END;
+
+<<<<<<<<<<clase 16,17,18>>>>>>>>>>>>>>>>>
+set serveroutput on;
+
+-- PARTE DECLARATIVA
+CREATE OR REPLACE PACKAGE pkPrueba IS
+
+    PROCEDURE reset_cont(v_nuevo_cont NUMBER);
+
+    FUNCTION devolver_cont RETURN NUMBER;
+    
+    FUNCTION F_ALVARO(DATO VARCHAR2) RETURN VARCHAR2;
+    
+    PROCEDURE spBorrarNovel;
+    
+END;
+
+
+-- PARTE DE CODIGO.
+CREATE OR REPLACE PACKAGE BODY pkPrueba IS
+
+    PROCEDURE reset_cont(v_nuevo_cont NUMBER)
+        IS
+    
+    BEGIN
+    
+        DBMS_OUTPUT.PUT_LINE(v_nuevo_cont);
+    
+    END reset_cont;
+    
+    FUNCTION devolver_cont return number
+        IS
+    
+        v_cont NUMBER;
+    BEGIN
+        RETURN v_cont;
+    END devolver_cont;
+    
+    FUNCTION F_ALVARO(DATO VARCHAR2) RETURN VARCHAR2
+    IS
+    
+    BEGIN
+        RETURN 'HOLA '||DATO;
+    END ;
+    
+    /****AÑADO UN NUEVO PROCEDIMIENTO**/
+    PROCEDURE spBorrarNovel
+        IS
+        
+         CURSOR C_DEP IS 
+            SELECT DEPTNO,MAX(HIREDATE)
+            FROM EMP
+            GROUP BY DEPTNO;
+        
+            V_DEPTNO EMP.DEPTNO%TYPE;
+            V_MAX_FEC DATE;
+        
+        
+        BEGIN
+        
+            OPEN C_DEP;
+            LOOP
+                FETCH C_DEP INTO V_DEPTNO,V_MAX_FEC;
+                EXIT WHEN C_DEP%NOTFOUND;
+        
+                DELETE FROM EMP
+                WHERE DEPTNO = V_DEPTNO
+                AND HIREDATE = V_MAX_FEC;
+        
+            END LOOP;
+            CLOSE C_DEP;
+        
+        EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+        
+        
+        END;
+    
+END pkPrueba;
+
+BEGIN
+    pkPrueba.reset_cont(33);
+END;
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(pkPrueba.F_ALVARO('IRENE'));
+END;
+
+/*---------------------------------------- 
+  DENTRO DEL PAQUETE UTILIDADES CREAR UNA PROCEDIMIENTO QUE  RECIBA UN NUMERO pNum
+  Y MUESTRE POR PANTALLAUNA FIGURA ASI, pNum es el número de líneas hacia abajo
+-------------------------------------------  
+*
+* *
+* * *
+* * * *
+* * * * *
+*/
+
+CREATE OR REPLACE PACKAGE UTILIDADES
+IS 
+    PROCEDURE SP_PINTAR_LINEAS(P_NUM INTEGER);
+END;
+
+CREATE OR REPLACE PACKAGE BODY UTILIDADES  
+IS
+    PROCEDURE SP_PINTAR_LINEAS(P_NUM IN INTEGER)
+
+    IS
+        V_RELLENO VARCHAR2(20):= '';
+    BEGIN
+        FOR K IN 1..P_NUM LOOP
+            
+            V_RELLENO:= V_RELLENO || '*';
+            DBMS_OUTPUT.PUT_LINE(V_RELLENO);
+        END LOOP;
+    END;
+END;
+    
+BEGIN 
+    UTILIDADES.SP_PINTAR_LINEAS(5);
+END;
+
+<<<<<<<<<<clase 19>>>>>>>>>>>>>>>>>
+/*************** LOS TRIGGERS*********************/
+
+CREATE OR REPLACE TRIGGER NO_CAMBIO_LOC_DEPT
+BEFORE
+UPDATE ON DEPT
+FOR EACH ROW
+--DECLARE
+BEGIN
+    
+    IF :NEW.LOC <> :OLD.LOC THEN
+        raise_application_error(-20600,'NO SE PUEDE CAMBIAR LA LOCALIZACIÓN DE UN DEPARTAMENTO');
+    END IF;
+END;
+
+
+INSERT INTO DEPT VALUES (50,'COLEGIO','SEVILLA');
+
+UPDATE DEPT
+    SET DNAME = 'COLE', LOC ='MADRID'
+WHERE DEPTNO = 50;
+
+-- OBLIGAR QUE LOS EMPLEADOS, NO COBREN MENOS DE 500 EUROS.
+-- NO_COBRA_MENOS_500
+
+CREATE OR REPLACE TRIGGER NO_COBRA_MENOS_500
+BEFORE
+UPDATE OF SAL OR INSERT
+ON EMP
+FOR EACH ROW --VA DE LA MANO CON LAS VARIABLES :NEW Y :OLD
+BEGIN
+
+    IF :NEW.SAL <= 500 THEN
+        raise_application_error(-20600,'NO PUEDE HABER UN SUELDO MENOR A 500');
+    END IF;
+    
+
+END;
+
+INSERT INTO EMP
+VALUES (68,'RAUL','STUDENT',NULL, NULL, 300, 0, 10);
+
+UPDATE EMP
+    SET COMM =200
+WHERE EMPNO = 7934;
+
+
+-- Ejercicio 1
+-- Haz un trigger llamado NoToquesManolo que impida al usuario MANOLO que cambie el sueldo 
+-- de los empleados que trabajan en DALLAS.
+CREATE OR REPLACE TRIGGER NoToquesManolo
+BEFORE
+UPDATE OF SAL OR INSERT OR UPDATE
+ON EMP
+FOR EACH ROW --VA DE LA MANO CON LAS VARIABLES :NEW Y :OLD
+DECLARE
+    V_DEPTNO DEPT.DEPTNO%TYPE;
+
+BEGIN
+
+    SELECT DEPTNO INTO V_DEPTNO
+    FROM DEPT
+    WHERE UPPER(LOC) = 'DALLAS';
+    
+    IF UPDATING THEN
+        IF UPPER(USER) = 'MANOLO' AND :OLD.DEPTNO = V_DEPTNO THEN
+            raise_application_error(-20600,'MANOLO QUE TE VEO');
+        END IF;
+    END IF;
+    
+    IF (DELETING AND :OLD.DEPTNO = V_DEPTNO) OR (INSERTING AND :NEW.DEPTNO = V_DEPTNO) THEN
+        raise_application_error(-20600,'MANOLO QUE TE VEO');
+    END IF;
+
+END;
+-------------------------
+CREATE TABLE DEPT_COPIA AS SELECT * FROM DEPT;
+CREATE TABLE DEPT_COPIA2 AS SELECT * FROM DEPT;
+
+-- CREAR UN TRIGGER QUE MANTEGAN SINCRONIZADA LA TABLA EMP_COPIA CON LA TABLA EMP_COPIA2;
+
+CREATE OR REPLACE TRIGGER SINCRONIZAR_EMP_COPIAS
+AFTER
+UPDATE OR INSERT OR UPDATE
+ON DEPT_COPIA
+FOR EACH ROW --VA DE LA MANO CON LAS VARIABLES :NEW Y :OLD
+BEGIN
+
+    IF DELETING THEN
+        DELETE FROM DEPT_COPIA2
+        WHERE DEPTNO = :OLD.DEPTNO;
+    END IF;    
+    
+    IF INSERTING THEN
+        INSERT INTO DEPT_COPIA2 
+        VALUES
+            (:NEW.DEPTNO, :NEW.DNAME, :NEW.LOC);
+     END IF;       
+     
+     IF UPDATING THEN
+        UPDATE DEPT_COPIA2
+            SET DEPTNO = :NEW.DEPTNO,
+                DNAME = :NEW.DNAME,
+                LOC = :NEW.LOC
+        WHERE DEPTNO = :OLD.DEPTNO;
+     
+     END IF;
+    
+END;
+
+
+<<<<<<<<<<clase 20>>>>>>>>>>>>>>>>>
+
+CREATE OR REPLACE PACKAGE GEOMETRIA IS 
+    PROCEDURE TRIANGULO (N INTEGER);
+END GEOMETRIA;
+
+CREATE OR REPLACE PACKAGE BODY GEOMETRIA IS 
+    PROCEDURE TRIANGULO (N INTEGER)
+    IS
+    ESTRELLA VARCHAR2(2000):= '*';
+    EST VARCHAR2(2000):= '*';
+    BEGIN
+        FOR K IN 1..N LOOP 
+            DBMS_OUTPUT.PUT_LINE(ESTRELLA);
+            ESTRELLA:= ESTRELLA || EST;
+        END LOOP;
+        
+        FOR K IN 1..N-1 LOOP 
+            EST:=  SUBSTR(ESTRELLA, K+2, LENGTH(ESTRELLA));
+            DBMS_OUTPUT.PUT_LINE(EST);
+        END LOOP;
+        
+    END TRIANGULO;
+END GEOMETRIA;
+
+
+BEGIN 
+GEOMETRIA.TRIANGULO(3);
+END;
+
+
+CREATE OR REPLACE PACKAGE GEOMETRIA IS
+    PROCEDURE ROMBO (N INTEGER);
+END GEOMETRIA;
+
+CREATE OR REPLACE PACKAGE BODY GEOMETRIA IS 
+    PROCEDURE ROMBO(N INTEGER)
+    IS
+    ESTRELLA VARCHAR2(100):='*';
+    ASTERISCO VARCHAR2(10):='*';
+    ESPACIO VARCHAR2(100);
+    CONTADOR INTEGER :=0;
+    HUECO VARCHAR2(10):='-';
+    BEGIN
+        for k in 1..N-1 loop
+            espacio:=espacio||hueco;
+        end loop;
+        
+        DBMS_OUTPUT.PUT_LINE(ESPACIO||ESTRELLA||ESPACIO);
+        
+        WHILE LENGTH(ESTRELLA)<(2*N-1) AND LENGTH(ESPACIO)>0 LOOP
+            ESTRELLA:=ASTERISCO||ESTRELLA||ASTERISCO;
+            ESPACIO:=SUBSTR(ESPACIO,1,LENGTH(ESPACIO)-1);
+            DBMS_OUTPUT.PUT_LINE(ESPACIO||ESTRELLA||ESPACIO); 
+        END LOOP;     
+        
+        FOR K IN REVERSE 1..N-1 LOOP
+            ESPACIO:=HUECO||ESPACIO;
+            ESTRELLA:=SUBSTR(ESTRELLA,2,LENGTH(ESTRELLA)-2);            
+            DBMS_OUTPUT.PUT_LINE(ESPACIO||ESTRELLA||ESPACIO);               
+        END LOOP;
+    END ROMBO;
+END GEOMETRIA;
+/
+
+BEGIN
+GEOMETRIA.ROMBO(5);
+END;
+
+-- Ejercicio 2
+-- Haz un trigger llamado DeptSiempreLLeno que impida que un departamento se quede sin empleados.
+CREATE OR REPLACE TRIGGER deptSiempreLleno
+BEFORE
+DELETE OR UPDATE OF DEPTNO 
+ON EMP
+FOR EACH ROW
+DECLARE
+    PRAGMA autonomous_transaction;
+    V_NUM_EMP_DEPTNO emp.deptno%type;
+BEGIN
+
+     -- CONTAR LOS EMPLEADOS DE ESE DEPARTAMENTO 
+     -- Y SI ME QUEDA UNO O MENOS ANTES DE BORRAR, PUES PARA LA EJECUCCIÓN
+     select count(EMPNO) into V_NUM_EMP_DEPTNO
+     from emp 
+     where deptno = :OLD.deptno;
+
+    IF V_NUM_EMP_DEPTNO <= 1 THEN
+        raise_application_error(-20621, ' No se puede dejar el departamento vacio ');
+    END IF;
+END;
+
+SELECT *
+FROM EMP;
+
+INSERT INTO EMP (EMPNO, ENAME,JOB,DEPTNO) VALUES (33,'RAUL','SERENO',40);
+
+DELETE FROM EMP
+WHERE DEPTNO = 40;
+
+/*5. Realizar un procedimiento que incremente el salario el 10% a los empleados que
+tengan una comisión superior al 5% del salario, y visualice el nombre, comisión y
+salario antiguo, y el nombre, comisión y salario nuevo de todos los empleados.*/
+
+CREATE OR REPLACE PROCEDURE spIncrementaSal 
+is
+   CURSOR C_EMP IS
+    SELECT ENAME, COMM, SAL
+    FROM EMP
+    WHERE NVL(COMM,0)  >= SAL*(5/100);
+    
+    V_NOM EMP.ENAME%TYPE;
+    V_COM EMP.COMM%TYPE;
+    V_SAL EMP.SAL%TYPE;
+    
+    --ESTE ES EL SALARIO NUEVO
+    V_SAL_NUEVO EMP.SAL%TYPE;
+   
+begin
+    OPEN C_EMP;
+            
+    LOOP
+        FETCH C_EMP INTO V_NOM, V_COM, V_SAL;
+        EXIT WHEN C_EMP%NOTFOUND;
+        
+        V_SAL_NUEVO := V_SAL *(1.10);
+        DBMS_OUTPUT.PUT_LINE('NOMBRE ' || V_NOM  ||' , SAL = ' || V_SAL||' , SAL NUEVO = '||V_SAL_NUEVO);
+           
+    END LOOP;
+    CLOSE C_EMP;
+EXCEPTION
+
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+    
+    
+END;    
+
+-- OTRA FORMA
+6
+BEGIN
+    spIncrementaSal;
+END;
+
+-- Haz un trigger que le suba un 10% el sueldo a los empleados cuando cambia la localidad donde trabajan.
+CREATE OR REPLACE TRIGGER SUBE10
+AFTER
+UPDATE OF LOC
+ON DEPT
+FOR EACH ROW
+DECLARE
+BEGIN
+    IF :OLD.LOC <> :NEW.LOC THEN
+        UPDATE EMP
+            SET  SAL = SAL *1.10
+        WHERE DEPTNO = :NEW.DEPTNO;
+    END IF;    
+END;
+
+Escribir un procedimiento que suba el sueldo de todos los empleados que ganen menos
+que el salario medio de su oficio. La subida será del 50% de la diferencia entre el
+salario del empleado y la media de su oficio. Se deberá asegurar que la transacción no
+se quede a medias, y se gestionarán los posibles errores.
+
+SELECT ROUND(AVG(SAL),0), JOB
+FROM EMP
+GROUP BY JOB;
+
+UPDATE emp
+SET
+    SAL = SAL + (V_SAL-SAL)*0.5
+WHERE
+    sal < V_SAL 
+    AND job = V_JOB;
+
+
+CREATE OR REPLACE PROCEDURE spMedia
+IS
+
+    CURSOR C_MEDIA IS
+        SELECT ROUND(AVG(SAL),0), JOB
+        FROM EMP
+        GROUP BY JOB;
+    V_SAL NUMBER;
+    V_JOB EMP.JOB%TYPE;
+    
+BEGIN
+
+    OPEN C_MEDIA;
+        LOOP 
+            FETCH C_MEDIA INTO V_SAL,V_JOB;
+            EXIT WHEN C_MEDIA%NOTFOUND;
+            
+            UPDATE emp
+            SET
+                SAL = SAL + (V_SAL-SAL)*0.5
+            WHERE
+                sal < V_SAL 
+                AND job = V_JOB;
+            
+        END LOOP;
+    CLOSE C_MEDIA;
+
+CREATE OR REPLACE PROCEDURE spMedia
+IS
+
+    CURSOR C_MEDIA IS
+        SELECT ROUND(AVG(SAL),0), JOB
+        FROM EMP
+        GROUP BY JOB;
+    V_SAL NUMBER;
+    V_JOB EMP.JOB%TYPE;
+    
+BEGIN
+
+    OPEN C_MEDIA;
+        LOOP 
+            FETCH C_MEDIA INTO V_SAL,V_JOB;
+            EXIT WHEN C_MEDIA%NOTFOUND;
+            
+            UPDATE emp
+            SET
+                SAL = SAL + (V_SAL-SAL)*0.5
+            WHERE
+                sal < V_SAL 
+                AND job = V_JOB;
+            
+        END LOOP;
+    CLOSE C_MEDIA;
+    
+
+END;
+
+CREATE OR REPLACE PROCEDURE spMedia
+IS
+
+    CURSOR C_MEDIA IS
+        SELECT ROUND(AVG(SAL),0), JOB
+        FROM EMP
+        GROUP BY JOB;
+    V_SAL NUMBER;
+    V_JOB EMP.JOB%TYPE;
+    
+BEGIN
+
+    OPEN C_MEDIA;
+        LOOP 
+            FETCH C_MEDIA INTO V_SAL,V_JOB;
+            EXIT WHEN C_MEDIA%NOTFOUND;
+            
+            UPDATE emp
+            SET
+                SAL = SAL + (V_SAL-SAL)*0.5
+            WHERE
+                sal < V_SAL 
+                AND job = V_JOB;
+            
+        END LOOP;
+    CLOSE C_MEDIA;
+    
+
+END;
+
+/*
+Escribir un procedimiento que suba el sueldo de todos los empleados que ganen menos
+que el salario medio de su oficio. La subida será del 50% de la diferencia entre el
+salario del empleado y la media de su oficio. Se deberá asegurar que la transacción no
+se quede a medias, y se gestionarán los posibles errores.
+*/
+
+CREATE OR REPLACE PROCEDURE spMedia
+IS
+    CURSOR C_EMP IS
+        SELECT EMPNO, SAL,JOB
+        FROM EMP;
+        
+    V_EMPNO EMP.EMPNO%TYPE;
+    V_SAL EMP.SAL%TYPE;
+    V_JOB EMP.JOB%TYPE;
+    
+    V_MEDIA_JOB NUMBER;
+
+BEGIN
+
+    OPEN C_EMP;
+    LOOP
+        FETCH C_EMP INTO V_EMPNO, V_SAL, V_JOB;
+        EXIT WHEN C_EMP%NOTFOUND;
+        
+        SELECT AVG(SAL) INTO V_MEDIA_JOB
+        FROM EMP
+        WHERE UPPER(JOB) = UPPER(V_JOB);
+        
+        
+        IF V_SAL <= V_MEDIA_JOB THEN
+        
+            UPDATE EMP
+                SET SAL  = SAL *1.5
+            WHERE EMPNO = V_EMPNO;
+        
+        END IF;
+    END LOOP;
+    CLOSE C_EMP;
+END;
+
+CREATE OR REPLACE PROCEDURE spMediaALVARO
+IS
+
+    CURSOR C_MEDIA IS
+        SELECT ROUND(AVG(SAL),0), UPPER(JOB)
+        FROM EMP
+        GROUP BY JOB;
+
+    V_SAL NUMBER;
+    V_JOB EMP.JOB%TYPE;
+    
+BEGIN
+
+    OPEN C_MEDIA;
+        LOOP 
+            FETCH C_MEDIA INTO V_SAL,V_JOB;
+            EXIT WHEN C_MEDIA%NOTFOUND;
+            
+            UPDATE emp
+            SET
+                SAL = SAL (1.5)
+            WHERE sal < V_SAL 
+            AND UPPER(job) = V_JOB;
+            
+        END LOOP;
+    CLOSE C_MEDIA;
+
+
+
+SELECT *
+FROM EMP E
+WHERE E.SAL >= (SELECT AVG(SAL) FROM EMP 
+                WHERE JOB = E.JOB);
+
+UPDATE EMP E
+    SET E.SAL = E.SAL * (1.5)
+WHERE E.SAL >= (SELECT AVG(SAL) FROM EMP 
+                WHERE JOB = E.JOB);
+
+
+/**** sabiendo sql***/
+CREATE OR REPLACE PROCEDURE spMediaDelTiri
+is
+
+begin
+
+    UPDATE EMP E
+        SET E.SAL = E.SAL * (1.5)
+    WHERE E.SAL >= (SELECT AVG(SAL) FROM EMP 
+                    WHERE JOB = E.JOB);
+end;
+
+
+/* PAQUETE CON VARIOS PROCEDIMIENTOS*/
+CREATE OR REPLACE PACKAGE PK_EMPLEADOS
+IS 
+    PROCEDURE spInsertNuevoEmpIVAN(p_apellido EMP.ENAME%TYPE);
+    PROCEDURE spInsertNuevoEmp(p_apellido EMP.ENAME%TYPE);
+    PROCEDURE spMedia;
+END;
+
+CREATE OR REPLACE PACKAGE BODY PK_EMPLEADOS
+IS
+    PROCEDURE spInsertNuevoEmpIVAN(p_apellido EMP.ENAME%TYPE)
+    IS
+        v_empno emp.empno%type:= 0;
+        v_sal NUMBER:= 0;
+        v_deptno emp.deptno%type :=0;
+    BEGIN
+        select max(empno)+1 into v_empno 
+        from emp;
+        
+        select deptno INTO v_deptno from dept where upper(loc) = 'SEVILLA';
+        
+        select avg(sal) INTO v_sal from emp;
+        
+        -- 2 formas distintas que espero que funcionen  
+        INSERT INTO EMP (EMPNO, ENAME ,JOB , hiredate ,sal, comm, DEPTNO) 
+        VALUES (v_empno, p_apellido, 'Novato', sysdate, v_sal, NULL, v_deptno);
+        
+        EXCEPTION
+            WHEN OTHERS THEN
+                DBMS_OUTPUT.PUT_LINE('Ocurrio el error' || SQLCODE || '--- mensaje:');
+    END;
+
+    PROCEDURE spInsertNuevoEmp(p_apellido EMP.ENAME%TYPE)
+    IS
+    BEGIN
+        INSERT INTO EMP (EMPNO, ENAME ,JOB , hiredate ,sal, comm, DEPTNO) 
+        VALUES ((select max(empno)+1 from emp), p_apellido, 'Novato', sysdate, (select avg(sal) from emp), NULL, (select deptno from dept where upper(loc) = 'SEVILLA'));
+        
+        EXCEPTION
+            WHEN OTHERS THEN
+                DBMS_OUTPUT.PUT_LINE('Ocurrio el error' || SQLCODE || '--- mensaje:');
+    END;
+
+    PROCEDURE spMedia
+    IS
+        CURSOR C_EMP IS
+            SELECT EMPNO, SAL, JOB
+            FROM EMP;
+            
+        V_EMPNO EMP.EMPNO%TYPE;
+        V_SAL EMP.SAL%TYPE;
+        V_JOB EMP.JOB%TYPE;
+        V_MEDIA_JOB NUMBER;
+    BEGIN
+        OPEN C_EMP;
+        LOOP
+            FETCH C_EMP INTO V_EMPNO, V_SAL, V_JOB;
+            EXIT WHEN C_EMP%NOTFOUND;
+            
+            SELECT AVG(SAL) INTO V_MEDIA_JOB
+            FROM EMP
+            WHERE UPPER(JOB) = UPPER(V_JOB);
+            
+            IF V_SAL <= V_MEDIA_JOB THEN
+                UPDATE EMP
+                SET SAL = SAL * 1.5
+                WHERE EMPNO = V_EMPNO;
+            END IF;
+        END LOOP;
+        CLOSE C_EMP;
+    END;
+END;
+
+
+EXEC PK_EMPLEADOS.spInsertNuevoEmp('ELVIS');
+select *
+from emp
+order by ENAME desc;
+
+<<<<<<<<<<clase 22>>>>>>>>>>>>>>>>>
+-- Ejercicio 3
+-- Haz un trigger que controle si los sueldos están en los siguientes rangos:
+-- CLERK: 800 – 1100
+-- ANALYST: 1200 – 1600
+-- MANAGER:1800 – 2000
+
+CREATE OR REPLACE TRIGGER RANGO_SUELDO
+BEFORE
+INSERT OR UPDATE OF SAL OR UPDATE OF JOB
+ON EMP
+FOR EACH ROW
+BEGIN 
+    IF UPPER(:NEW.JOB) = 'CLERK' AND (:NEW.SAL > 1100 OR :NEW.SAL <800) THEN
+        raise_application_error (-20600,:NEW.SAL||' NO ES UN SUELDO VALIDO PARA '||:NEW.JOB);
+    END IF;
+    
+     IF UPPER(:NEW.JOB) = 'ANALYST' AND (:NEW.SAL > 1600 OR :NEW.SAL <1200) THEN
+        raise_application_error (-20600,:NEW.SAL||' NO ES UN SUELDO VALIDO PARA '||:NEW.JOB);
+    END IF;
+    
+    IF UPPER(:NEW.JOB) = 'MANAGER' AND (:NEW.SAL > 2000 OR :NEW.SAL <1800) THEN
+        raise_application_error (-20600,:NEW.SAL||' NO ES UN SUELDO VALIDO PARA '||:NEW.JOB);
+    END IF;
+END;
+
+SELECT *
+FROM EMP;
+
+UPDATE EMP
+SET JOB = 'CLERK'
+    ,SAL = 2000
+WHERE EMPNO = 33;
+
+<<<<<<<<<<clase 23>>>>>>>>>>>>>>>>>
+3. Sabiendo que el 20% de lo vendido por cada empleado se aumenta al salario de este.
+Actualizar el salario de los empleados a ese 20% vendido.
+SELECT SUM(DP.PRECIOUNIDAD*DP.CANTIDAD)*0.2
+FROM EMPLEADOS E, CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP
+WHERE E.CODIGOEMPLEADO = C.CODIGOEMPLEADOREPVENTAS
+AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+AND E.CODIGOEMPLEADO = 1;
+
+
+UPDATE EMPLEADOS EM
+SET EM.SALARIO = em.SALARIO + (SELECT NVL(SUM(DP.PRECIOUNIDAD*DP.CANTIDAD)*0.2,0)
+                        FROM EMPLEADOS E, CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP
+                        WHERE E.CODIGOEMPLEADO = C.CODIGOEMPLEADOREPVENTAS
+                        AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+                        AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+                        AND E.CODIGOEMPLEADO = EM.CODIGOEMPLEADO
+)
+
+
+SELECT E.CODIGOEMPLEADO,E.CODIGOOFICINA, E.NOMBRE,(SELECT CIUDAD FROM OFICINAS WHERE CODIGOOFICINA = E.CODIGOOFICINA)
+FROM EMPLEADOS E;
+
+
+
+
+4. Suponiendo que puede haber más de un cliente que ha pagado lo máximo, obtener el nombre del cliente y la ciudad del cliente que ha pagado más (tabla Pagos)
+
+SELECT C.NOMBRECLIENTE,C. CIUDAD, SUM(PA.CANTIDAD)
+FROM CLIENTES C, PAGOS PA
+WHERE C.CODIGOCLIENTE = PA.CODIGOCLIENTE
+GROUP BY C.NOMBRECLIENTE,C. CIUDAD
+HAVING SUM(PA.CANTIDAD) = (SELECT MAX(SUM(CANTIDAD))
+                            FROM PAGOS
+                            GROUP BY CODIGOCLIENTE);
+
+
+-- si solo hubiera uno.
+SELECT * FROM (
+                SELECT C.NOMBRECLIENTE,C. CIUDAD, SUM(PA.CANTIDAD)
+                FROM CLIENTES C, PAGOS PA
+                WHERE C.CODIGOCLIENTE = PA.CODIGOCLIENTE
+                GROUP BY C.NOMBRECLIENTE,C. CIUDAD
+                order by 3 desc
+                )
+WHERE ROWNUM =1;
+
+-- 6. Crear un trigger en pedidos de tal forma que, al insertar el pedido, debemos asegurarnos
+-- qué el cliente tiene la misma ciudad que el empleado que le da el pedido. (2 puntos).
+
+CREATE OR REPLACE TRIGGER TR_MISMA_CIUDAD
+BEFORE
+INSERT 
+ON PEDIDOS
+FOR EACH ROW
+DECLARE
+    V_CIU_EMP OFICINAS.CIUDAD%TYPE;
+    V_CIU_CLI CLIENTES.CIUDAD%TYPE;
+BEGIN 
+        
+    -- CIUDAD CLIENTE
+    SELECT C.CIUDAD, O.CIUDAD INTO V_CIU_CLI, V_CIU_EMP
+    FROM CLIENTES C, EMPLEADOS E, OFICINAS O
+    WHERE C.CODIGOEMPLEADOREPVENTAS = E.CODIGOEMPLEADO
+    AND E.CODIGOOFICINA = O.CODIGOOFICINA
+    AND C.CODIGOCLIENTE = :NEW.CODIGOCLIENTE;
+    
+    IF V_CIU_CLI <> V_CIU_EMP THEN
+        raise_application_error (-20600,'UN CLIENTE NO PUEDE TENER DISTINTA CIUDAD QUE SU EMPLEADO QUE LO ATIENDE');
+    END IF;
+    
+END;
+
+<<<<<<<<<<clase 24>>>>>>>>>>>>>>>>>
+/*
+5. Obtener el nombre y una catalogación de los clientes, de tal forma que
+(1 punto)
+• Si ha comprado >= 10000  Cliente Premiun.
+• Si compra de >=5000 y <10000  Cliente Normal.
+• Si compra de >=0 a < 5000  Cliente Básico.
+• En cualquier otro caso  Sin catalogar
+*/
+SELECT C.NOMBRECLIENTE,
+       CASE
+            WHEN SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) >=10000  THEN 'CLIENTE PREMIUN'
+            WHEN SUM(DP.CANTIDADDP.PRECIOUNIDAD)<10000 AND SUM(DP.CANTIDADDP.PRECIOUNIDAD)>=5000 THEN 'CLIENTE NORMAL'
+            WHEN SUM(DP.CANTIDADDP.PRECIOUNIDAD) <5000 AND SUM(DP.CANTIDADDP.PRECIOUNIDAD) >=0 THEN 'CLIENTE BASICO'
+            ELSE 'SIN CATALOGAR'
+        END AS CATALOGACION
+FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP
+WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+GROUP BY C.NOMBRECLIENTE;
+
+
+-- CATEGORIZAMOS EN BASE A SUELDO
+-- SI COBRA MAS DE 3000--> SUELDO DE RICO
+-- SI COBRA MÁS DE 2000 Y MENOS DE 3000-- SUELDO BUENO
+-- SI COBRA ENTRE 1000 Y 2000 -- SUELDO MEDIO
+-- MENOS DE MIL---SUELDO BASURA
+SELECT E.ENAME, SAL,
+        CASE
+            --WHEN SAL >=10  THEN 'VENDO DROGA'
+            WHEN SAL >=3000 AND UPPER(E.JOB) ='PRESIDENT' THEN 'QUE NO TE LO DIGO'
+            WHEN SAL >=3000 THEN 'SUELDO DE RICO'
+            WHEN SAL<3000 AND SAL>=2000 THEN 'SUELDO BUENO'
+            WHEN SAL <2000 AND SAL >=1000 THEN 'SUELDO MEDIO'
+            ELSE 'SUELDO BASURA'
+         END AS TIPIFICACION_SUELDO
+FROM EMP E;
+
+/*7.
+Crear un procedimiento spPagosPedido con parámetros de entrada pFECINI y pFECFIN,
+tal que por cada pedido situado entre esas dos fechas, se genere un pago con la cantidad
+de ese pedido que cuesta ese pedido, al cliente que la ha realizado y al mes siguiente de
+haber realizado el pedido. Controlar todos los errores posibles que se pueden obtener.
+Crear el procedimiento dentro de un paquete llamado pkPedidos.
+(3 puntos)*/
+
+CREATE OR REPLACE PACKAGE pkPedidos
+IS
+    PROCEDURE spPagosPedido (pFECINI DATE, pFECFIN DATE);
+    PROCEDURE spPagosPedido2 (pFECINI DATE, pFECFIN DATE);
+END;
+/
+CREATE OR REPLACE PACKAGE BODY pkPedidos
+IS
+        PROCEDURE spPagosPedido (pFECINI DATE, pFECFIN DATE)
+        IS
+            CURSOR C_PED IS
+                SELECT P.CODIGOCLIENTE,FECHAPEDIDO,SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)
+                FROM PEDIDOS P, DETALLEPEDIDOS DP
+                WHERE P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+                AND FECHAPEDIDO >= pFECINI
+                AND FECHAPEDIDO <= pFECFIN
+                GROUP BY P.CODIGOCLIENTE,FECHAPEDIDO;
+                
+            V_CODCLI CLIENTES.CODIGOCLIENTE%TYPE;
+            V_FECPED PEDIDOS.FECHAPEDIDO%TYPE;
+            V_COSTE NUMBER;
+              
+                
+        
+        BEGIN
+        
+            OPEN C_PED;
+            LOOP
+                FETCH C_PED INTO V_CODCLI, V_FECPED, V_COSTE;
+                EXIT WHEN C_PED%NOTFOUND;
+                
+                INSERT INTO pagos ( codigocliente, formapago,idtransaccion,fechapago, cantidad)
+                VALUES (  V_CODCLI, NULL,NULL,ADD_MONTHS(V_FECPED,1),V_COSTE);
+                
+            END LOOP;
+            CLOSE C_PED;
+        
+        
+        END;
+        
+        PROCEDURE spPagosPedido2 (pFECINI DATE, pFECFIN DATE)
+        IS
+        
+        BEGIN
+            INSERT INTO pagos ( codigocliente, formapago,idtransaccion,fechapago, cantidad)
+            SELECT P.CODIGOCLIENTE,NULL, NULL, ADD_MONTHS(FECHAPEDIDO,1),SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)
+            FROM PEDIDOS P, DETALLEPEDIDOS DP
+            WHERE P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+            AND FECHAPEDIDO >= pFECINI
+            AND FECHAPEDIDO <= pFECFIN
+            GROUP BY P.CODIGOCLIENTE,FECHAPEDIDO;
+        
+        END;
+END;
+/*
+CREATE OR REPLACE PROCEDURE spPagosPedido (pFECINI DATE, pFECFIN DATE)
+IS
+    CURSOR C_PED IS
+        SELECT P.CODIGOCLIENTE,FECHAPEDIDO,SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)
+        FROM PEDIDOS P, DETALLEPEDIDOS DP
+        WHERE P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+        AND FECHAPEDIDO >= pFECINI
+        AND FECHAPEDIDO <= pFECFIN
+        GROUP BY P.CODIGOCLIENTE,FECHAPEDIDO;
+        
+    V_CODCLI CLI  CLIENTES.CODIGOCLIENTE%TYPE;
+    V_FECPED PEDIDOS.FECHAPEDIDO%TYPE;
+    V_COSTE NUMBER;
+      
+        
+
+BEGIN
+
+    OPEN C_PED;
+    LOOP
+        FETCH C_PED INTO V_CODCLI, V_FECPED, V_COSTE;
+        EXIT WHEN C_PED%NOTFOUND;
+        
+        INSERT INTO pagos ( codigocliente, formapago,idtransaccion,fechapago, cantidad)
+        VALUES (  V_CODCLI, NULL,NULL,ADD_MONTHS(V_FECPED,1),V_COSTE);
+        
+    END LOOP;
+    CLOSE C_PED;
+
+
+END;
+*/
+
+--10. Obtener el país donde se ha gastado más dinero en comprar productos.
+SELECT C.PAIS,SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)
+FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP
+WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+GROUP BY C.PAIS;
+HAVING SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) = (
+                                            SELECT MAX(SUM(DP.CANTIDAD*DP.PRECIOUNIDAD))
+                                            FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP,PRODUCTOS PR
+                                            WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+                                            AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+                                            AND DP.CODIGOPRODUCTO = PR.CODIGOPRODUCTO
+                                            GROUP BY C.PAIS);
+
+
+
+<<<<<<<<<<clase 24>>>>>>>>>>>>>>>>>
+CREATE OR REPLACE FUNCTION ObtenerMejorCliente(pNomPro PRODUCTOS.NOMBRE%TYPE)
+RETURN VARCHAR2
+IS
+    V_NOMCLI CLIENTES.NOMBRECLIENTE%TYPE;
+
+BEGIN
+    SELECT C.NOMBRECLIENTE INTO V_NOMCLI
+    FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP, PRODUCTOS PR
+    WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+    AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO 
+    AND DP.CODIGOPRODUCTO = PR.CODIGOPRODUCTO
+    AND UPPER(PR.NOMBRE) = UPPER(pNomPro)
+    GROUP BY NOMBRECLIENTE
+    HAVING SUM(DP.CANTIDADDP.PRECIOUNIDAD)=(SELECT MAX(SUM(DP.CANTIDADDP.PRECIOUNIDAD))
+                                                FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP, PRODUCTOS PR
+                                                WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+                                                AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO 
+                                                AND DP.CODIGOPRODUCTO = PR.CODIGOPRODUCTO
+                                                AND UPPER(PR.NOMBRE) = UPPER(pNomPro)
+                                                GROUP BY NOMBRECLIENTE);
+     
+
+    RETURN V_NOMCLI;
+    
+EXCEPTION
+    WHEN OTHERS THEN 
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);
+    RETURN SQLERRM;
+    
+END;
+
+
+SELECT C.NOMBRECLIENTE, 
+        SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) AS GASTO
+FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP, PRODUCTOS PR
+WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO 
+AND DP.CODIGOPRODUCTO = PR.CODIGOPRODUCTO
+GROUP BY NOMBRECLIENTE;
+
+
+SELECT MAX(GASTO) FROM (SELECT C.NOMBRECLIENTE, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) AS GASTO
+                        FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP, PRODUCTOS PR
+                        WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+                        AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO 
+                        AND DP.CODIGOPRODUCTO = PR.CODIGOPRODUCTO
+                        GROUP BY NOMBRECLIENTE);
+
+
+SELECT MAX(SUM(DP.CANTIDAD*DP.PRECIOUNIDAD))
+FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP, PRODUCTOS PR
+WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO 
+AND DP.CODIGOPRODUCTO = PR.CODIGOPRODUCTO
+GROUP BY NOMBRECLIENTE;
+
+
+SELECT C.NOMBRECLIENTE, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD) AS GASTO
+FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP, PRODUCTOS PR
+WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO 
+AND DP.CODIGOPRODUCTO = PR.CODIGOPRODUCTO
+AND UPPER(PR.NOMBRE) = UPPER(pNomPro)
+GROUP BY NOMBRECLIENTE
+HAVING SUM(DP.CANTIDADDP.PRECIOUNIDAD)=(SELECT MAX(SUM(DP.CANTIDADDP.PRECIOUNIDAD))
+                                            FROM CLIENTES C, PEDIDOS P, DETALLEPEDIDOS DP, PRODUCTOS PR
+                                            WHERE C.CODIGOCLIENTE = P.CODIGOCLIENTE
+                                            AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO 
+                                            AND DP.CODIGOPRODUCTO = PR.CODIGOPRODUCTO
+                                            AND UPPER(PR.NOMBRE) = UPPER(pNomPro)
+                                            GROUP BY NOMBRECLIENTE);
+
+--15. Mostrar la media de puntos en partidos de los equipos de la division Pacific.
+
+SELECT *
+FROM EQUIPOS E
+WHERE UPPER(E.DIVISION) = 'PACIFIC';
+
+
+-- LOS EQUIPOS JUEGAN PARTIDOS, DE LOCAL Y DE VISITANTE.
+-- DE LOCAL
+SELECT E.NOMBRE, PA.PUNTOS_LOCAL
+FROM EQUIPOS E, PARTIDOS PA
+WHERE UPPER(E.DIVISION) = 'PACIFIC'
+AND E.NOMBRE = PA.EQUIPO_LOCAL;
+
+
+-- DE VISITANTE
+SELECT E.NOMBRE, PA.PUNTOS_VISITANTE
+FROM EQUIPOS E, PARTIDOS PA
+WHERE UPPER(E.DIVISION) = 'PACIFIC'
+AND E.NOMBRE = PA.EQUIPO_VISITANTE;
+
+
+
+SELECT NOMBRE, AVG(PUNTOS) FROM (
+                                    SELECT E.NOMBRE, PA.PUNTOS_LOCAL AS PUNTOS
+                                    FROM EQUIPOS E, PARTIDOS PA
+                                    WHERE UPPER(E.DIVISION) = 'PACIFIC'
+                                    AND E.NOMBRE = PA.EQUIPO_LOCAL
+                                    UNION ALL
+                                    SELECT E.NOMBRE, PA.PUNTOS_VISITANTE
+                                    FROM EQUIPOS E, PARTIDOS PA
+                                    WHERE UPPER(E.DIVISION) = 'PACIFIC'
+                                    AND E.NOMBRE = PA.EQUIPO_VISITANTE)
+GROUP BY NOMBRE;
+
+/*Haz un procedimiento que, dada una temporada y un equipo (ambos pasados como parámetros de entrada) MUESTRE:
+Cuántos partidos en total ha ganado ese equipo como local
+Y Para cada partido: Decir cuántos puntos anotó.*/
+CREATE OR REPLACE PROCEDURE spEquipoGanador(pTemp partidos.temporada%type, pEquipo equipos.nombre%type)
+is
+    v_partidos_ganados number;
+    
+    cursor c_part is
+        select pa.codigo, pa.puntos_local
+        from partidos pa
+        where upper(pa.equipo_local) = upper(pEquipo)
+        and pa.temporada = pTemp;
+    
+    v_cod partidos.codigo%type;
+    v_puntos_local partidos.puntos_local%type;
+        
+begin
+
+    open c_part;
+    loop
+        fetch c_part into v_cod, v_puntos_local;
+        exit when c_part%notfound;
+        
+        DBMS_OUTPUT.PUT_LINE('El equipo '|| pEquipo || ' en el partido '||v_cod||' metio '|| v_puntos_local);
+        
+    end loop;
+    close c_part;
+
+    --- y cuantos partidos ha ganado
+    select count(*) into v_partidos_ganados
+    from partidos pa
+    where pa.puntos_visitante < pa.puntos_local
+    and upper(pa.equipo_local) = upper(pEquipo)
+    and pa.temporada = pTemp;
+    
+    DBMS_OUTPUT.PUT_LINE('El equipo '|| pEquipo || ' ganó '||v_partidos_ganados||' partidos ');
+
+EXCEPTION
+    WHEN OTHERS THEN 
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);
+end;
+
+/*4.Si de lo gastado (pedidos) por los clientes, los directores de oficina tienen una comisión
+del 10%, y los representantes de ventas un 5%, obtén cuanta comisión tiene cada uno de
+los empleados de estos tipos, mostrando el nombre del empleado.
+-- QUIERO 3 FORMAS DE HACERLO DISTINTAS
+*/
+-- TENEMOS DE CONSULTA BASE
+select E.NOMBRE, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)
+from EMPLEADOS E, CLIENTES C, PEDIDOS P,DETALLEPEDIDOS DP
+WHERE E.CODIGOEMPLEADO = C.CODIGOEMPLEADOREPVENTAS
+AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+GROUP BY E.NOMBRE;
+------------
+
+--1º FORMA UNION
+select E.NOMBRE, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)*0.1
+from EMPLEADOS E, CLIENTES C, PEDIDOS P,DETALLEPEDIDOS DP
+WHERE E.CODIGOEMPLEADO = C.CODIGOEMPLEADOREPVENTAS
+AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+AND UPPER(E.PUESTO) = 'DIRECTOR OFICINA'
+GROUP BY E.NOMBRE
+UNION ALL
+select E.NOMBRE, SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)*0.05
+from EMPLEADOS E, CLIENTES C, PEDIDOS P,DETALLEPEDIDOS DP
+WHERE E.CODIGOEMPLEADO = C.CODIGOEMPLEADOREPVENTAS
+AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+AND UPPER(E.PUESTO) = 'REPRESENTANTE VENTAS'
+GROUP BY E.NOMBRE;
+
+--2º DECODE
+select E.NOMBRE, 
+       DECODE(UPPER(E.PUESTO),'REPRESENTANTE VENTAS',SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)*0.05,
+                              'DIRECTOR OFICINA',  SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)*0.1,
+                              0)
+from EMPLEADOS E, CLIENTES C, PEDIDOS P,DETALLEPEDIDOS DP
+WHERE E.CODIGOEMPLEADO = C.CODIGOEMPLEADOREPVENTAS
+AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+AND UPPER(E.PUESTO) IN('DIRECTOR OFICINA','REPRESENTANTE VENTAS')
+GROUP BY E.NOMBRE,UPPER(E.PUESTO);
+
+--3º CASE WHEN
+select E.NOMBRE, 
+       CASE
+       WHEN UPPER(E.PUESTO)= 'REPRESENTANTE VENTAS' THEN SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)*0.05
+       WHEN UPPER(E.PUESTO)= 'DIRECTOR OFICINA' THEN SUM(DP.CANTIDAD*DP.PRECIOUNIDAD)*0.1
+       END AS COMISION
+from EMPLEADOS E, CLIENTES C, PEDIDOS P,DETALLEPEDIDOS DP
+WHERE E.CODIGOEMPLEADO = C.CODIGOEMPLEADOREPVENTAS
+AND C.CODIGOCLIENTE = P.CODIGOCLIENTE
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+AND UPPER(E.PUESTO) IN('DIRECTOR OFICINA','REPRESENTANTE VENTAS')
+GROUP BY E.NOMBRE,UPPER(E.PUESTO);
+
+/*** REALIZAR EN LA BASE DE DATOS LAS MODIFICICACIONES NECESARIAS PARA QUE LOS BULLS DE CHICADO NO
+     PUEDAN PERDER UN PARTIDO **/
+
+CREATE OR REPLACE TRIGGER TR_CHICAGO_NO_PIERDE 
+BEFORE
+INSERT OR UPDATE OF EQUIPO_LOCAL OR UPDATE OF EQUIPO_VISITANTE OR UPDATE OF PUNTOS_LOCAL OR UPDATE OF PUNTOS_VISITANTE
+ON PARTIDOS
+FOR EACH ROW
+DECLARE 
+
+BEGIN 
+
+        IF ( (
+            UPPER(:NEW.EQUIPO_LOCAL) = 'BULLS' AND :NEW.PUNTOS_VISITANTE > :NEW.PUNTOS_LOCAL
+            )
+            OR
+            (
+            UPPER(:NEW.EQUIPO_VISITANTE) = 'BULLS' AND :NEW.PUNTOS_VISITANTE < :NEW.PUNTOS_LOCAL
+            )) then
+            raise_application_error(-20600,'BULLS NO PUEDE TENER MENOS PUNTOS QUE EL OTRO EQUIPO');
+        END IF;   
+
+END;
+
+/*** CREAR UNA FUNCIÓN QUE DADA UNA DIVISIÓN  Y UNA TEMPORADA
+DEVUELVA LOS 3 EQUIPOS (NOMBRES CONCATENADOS) QUE MÁS PUNTOS HAN METIDO EN ESA DIVISION Y TEMPORADA*/
+
+<<<<<<<<<<clase 25>>>>>>>>>>>>>>>>>
+/*
+Crear un procedimiento spGenerarPedidosCompras con parámetros de entrada pFECINI y pFECFIN, 
+tal que, por cada pedido situado entre esas dos fechas, se genere un pedido
+material (T_PEDIDOMATERIAL_COMPRAS), con numpedido, el siguiente pedido que
+haya sin dejar huecos (es decir que si del 1 al 15 no está relleno el 3, pues primero el 3,
+luego el 16, 17 y así sucesivamente), con fecha inicio la fecha de pedido y con fecha fin
+un mes más tarde por cantidad la pedida + UN EXTRA QUE PASAMOS POR PARAMETRO en cada detallepedidos. Crear el procedimiento
+dentro de un paquete llamado pkPedidosCompras.
+*/
+
+CREATE OR REPLACE PACKAGE pkPedidosCompras IS
+
+    PROCEDURE spGenerarPedidosCompras(pFECINI DATE, pFECFIN DATE, pExtra integer);
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY pkPedidosCompras IS
+
+    PROCEDURE spGenerarPedidosCompras(pFECINI DATE, pFECFIN DATE, pExtra integer)
+        IS
+            CURSOR C_PED IS 
+                SELECT P.FECHAPEDIDO, ADD_MONTHS(P.FECHAPEDIDO,1), DP.CANTIDAD, DP.CODIGOPRODUCTO
+                FROM PEDIDOS P, DETALLEPEDIDOS DP
+                WHERE P.CODIGOPEDIDO =DP.CODIGOPEDIDO
+                AND P.FECHAPEDIDO >= pFECINI
+                AND P.FECHAPEDIDO <= pFECFIN;
+            
+            V_FEC PEDIDOS.FECHAPEDIDO%TYPE;
+            V_FECMES PEDIDOS.FECHAPEDIDO%TYPE;
+            V_CANT DETALLEPEDIDOS.CANTIDAD%TYPE;
+            V_CODPRO PRODUCTOS.CODIGOPRODUCTO%TYPE;
+            V_NUMPED pedidosmaterialcompras.NUMPEDIDO%TYPE;
+            V_MAX NUMBER;
+            V_CUENTA NUMBER;
+            v_existe number;
+    BEGIN
+    
+        OPEN C_PED;    
+        LOOP
+            FETCH C_PED INTO V_FEC, V_FECMES,V_CANT,V_CODPRO;
+            EXIT WHEN C_PED%NOTFOUND;
+            
+            --  ¿QUE DEBE DE PASAR AQUI?----
+            -- 2 COSAS
+            -- CALCULAR EL NUMPED
+            SELECT NVL(MAX(NUMPEDIDO),0), NVL(COUNT(NUMPEDIDO),0) INTO V_MAX, V_CUENTA
+            FROM pedidosmaterialcompras;
+            
+            IF V_MAX = V_CUENTA THEN
+                
+                V_NUMPED := V_MAX +1;
+            ELSE
+                FOR K in 1..v_max
+                loop
+                    select nvl(count(*),0) into v_existe
+                    from pedidosmaterialcompras
+                    where numpedido = k;
+                    
+                    if v_existe =0 then
+                        v_numped := k;
+                        exit;
+                    end if;    
+                end loop;
+            END IF;
+            -- INSERTAR.
+            INSERT INTO pedidosmaterialcompras 
+                (numpedido,fechainicio,fechafin,codigoproducto,cantidadsolicitada)
+            VALUES 
+                (V_NUMPED, V_FEC,V_FECMES,V_CODPRO,V_CANT
+                );
+        END LOOP;
+        CLOSE C_PED;
+
+    EXCEPTION
+        WHEN OTHERS THEN 
+        DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);
+    end spGenerarPedidosCompras;
+END;
+
+--1. REALIZA UN TRIGGUER QUE LOGRE ASEGURARSE QUE LOS EQUIPOS NO PUEDEN CAMBIAR DE CONFERENCIA
+-- 2. EN UN MISMO TRIGGER, IMPEDIR QUE UN EQUIPO JUEGUE CONTRA SI MISMO Y QUE UN PARTIDO NO EMPATEN EN PUNTOS
+
+
+
+

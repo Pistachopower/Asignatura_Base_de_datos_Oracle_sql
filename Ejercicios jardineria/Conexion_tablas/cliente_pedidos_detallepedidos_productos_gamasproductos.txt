@@ -1,0 +1,7 @@
+select *
+from clientes c, pedidos p, 
+detallepedidos dp, productos pro, gamasproductos gp
+where c.codigocliente= p.codigocliente
+and p.codigopedido= dp.codigopedido
+and pro.codigoproducto= dp.codigoproducto
+and gp.gama= pro.gama;

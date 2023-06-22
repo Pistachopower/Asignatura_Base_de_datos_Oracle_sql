@@ -1,0 +1,5 @@
+select *
+from jugadores j, estadisticas est, equipos eq, partidos p
+where j.codigo= est.jugador
+and eq.nombre= j.nombre_equipo
+and eq.nombre= p.equipo_visitante;

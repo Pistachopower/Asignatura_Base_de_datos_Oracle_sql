@@ -1,0 +1,3 @@
+select * 
+from empleados e, oficinas o
+where o.codigooficina= e.codigooficina;

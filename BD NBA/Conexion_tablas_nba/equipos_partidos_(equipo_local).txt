@@ -1,0 +1,3 @@
+select p.temporada, e.nombre
+from equipos e, partidos p
+where e.nombre= p.equipo_local;

@@ -1,0 +1,108 @@
+-- Crear un procedimiento que muestre el nombre de todos los 
+--departamentos y el
+-- número de empleados que tiene (incluso si no tiene empleados).
+
+CREATE OR REPLACE PROCEDURE p_consulta_depart_emp (
+    p_cursor out SYS_REFCURSOR --> devuelve los resultado consulta
+) IS
+BEGIN
+    OPEN p_cursor FOR --abre consulta con resultado y lo devuelve en
+        -- p_cursor 
+    SELECT
+        d.dname,
+        COUNT(e.empno)
+    FROM
+        dept   d
+        LEFT JOIN emp  e ON d.deptno = e.deptno
+    GROUP BY
+        d.dname;
+END;
+
+
+DECLARE
+
+    v_cursor SYS_REFCURSOR;
+    v_nombre_depart dept.dname%type;
+    v_total_emp number;
+BEGIN
+-- llama al procedimiento p_consulta_depart_emp con la consulta
+    p_consulta_depart_emp(v_cursor);
+    loop
+    --recorre los resultados de la consulta y los guarda en las variables
+        fetch v_cursor into v_nombre_depart, v_total_emp;
+        exit when v_cursor%notfound;
+        --imprime la consulta final
+        DBMS_OUTPUT.PUT_LINE( v_nombre_depart || ' ' || v_total_emp);
+    end loop;
+    close v_cursor;
+    
+    EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('Ocurrió el error '
+                             || sqlcode
+                             || ' ---mensaje: '
+                             || sqlerrm);
+END;
+
+
+--Crear una función que obtenga el factorial de un número pasado como parámetro.--
+
+
+create or replace function f_factorial 
+(v_numero number)
+return number
+is
+    v_resultado number:= 1;
+begin 
+    for i in 1..v_numero loop
+        v_resultado:= v_resultado * i;
+        DBMS_OUTPUT.PUT_LINE(v_resultado);
+    end loop;  
+    return v_resultado;
+                                 
+end;
+
+begin 
+     DBMS_OUTPUT.PUT_LINE(f_factorial(4));
+end;
+
+
+/*
+Diseñar una función llamada f_esPrimo que reciba como argumento
+un número entero y devuelva verdadero o falso según el caso. 
+(Un número es primo si solo es divisible por 1 y por el mismo. 
+Un número es divisible por otro si el
+resto de la división es 0)
+
+caso de prueba
+7 es primo 
+4 no lo es
+*/
+
+create or replace function f_esPrimo
+(v_numero number)
+return boolean
+is
+    v_verificador BOOLEAN:= True;
+begin 
+    for valor in 2..v_numero -1 loop
+        if mod(v_numero,valor) = 0 then 
+            v_verificador:= False; --no es primo
+            exit;
+        else
+            v_verificador:= True; --si es primo
+        --DBMS_OUTPUT.PUT_LINE(v_resultado);
+        end if;
+    end loop;  
+    return v_verificador;
+                                 
+end;
+
+begin
+    if f_esPrimo(4) then
+     DBMS_OUTPUT.PUT_LINE('EL NUMERO ES PRIMO');
+    
+    else
+    DBMS_OUTPUT.PUT_LINE('EL NUMERO NO ES PRIMO');
+    end if;
+end;

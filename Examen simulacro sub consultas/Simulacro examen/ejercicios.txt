@@ -1,0 +1,37 @@
+--1
+select fecha as fecha_realizacion, id, id_cliente, id_comercial, total  
+from pedido
+order by fecha DESC;
+
+--2 
+select id || ' ' || nombre || ' ' || apellido1 as NOMBRE_APELLIDO
+from cliente 
+where lower(apellido2) is not null
+order by apellido1 asc,apellido2 asc, nombre asc;
+
+--3
+select nombre 
+from cliente
+where UPPER(nombre) like 'A%'
+or UPPER(nombre) like 'P%'
+or UPPER(nombre) like '%N';
+
+--4
+select DISTINCT c.id, c.nombre, c.apellido1, c.apellido2, p.total
+from cliente c, pedido p
+where c.id= p.id
+order by c.nombre, c.apellido1, c.apellido2;
+
+
+--5
+select c.nombre, c.apellido1, c.apellido2, p.total, come.nombre, 
+come.apellido1, come.apellido2 
+from cliente c, pedido p, comercial come
+where c.id= p.id
+and p.id= come.id;
+
+--6
+select * from pedido;
+
+select c.nombre, 
+from cliente c, pedido p

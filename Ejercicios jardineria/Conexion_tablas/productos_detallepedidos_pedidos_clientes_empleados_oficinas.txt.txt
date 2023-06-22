@@ -1,0 +1,8 @@
+select * 
+from oficinas o, empleados e, clientes c,pedidos pe,
+detallepedidos dp, productos p 
+where o.codigooficina= e.codigooficina
+and e.codigoempleado= c.CODIGOEMPLEADOREPVENTAS
+and c.codigocliente= pe.codigocliente
+and pe.codigopedido= dp.codigopedido
+and p.codigoproducto= dp.codigoproducto;

@@ -1,0 +1,62 @@
+/*Haz un procedimiento que, dada una temporada y un equipo 
+(ambos pasados como
+parámetros de entrada) diga:
+Cuántos partidos en total ha ganado ese equipo como local
+Para cada partido: Decir cuántos puntos anotó.*/
+
+
+
+select  p.equipo_local, count(p.codigo), sum(p.puntos_local)
+from partidos p
+where upper(equipo_local) = 'RAPTORS'
+and p.puntos_local> p.puntos_visitante
+and  p.temporada= '98/99'
+group by p.equipo_local;
+/
+
+
+
+
+CREATE OR REPLACE PROCEDURE sp_total_partidos_ganados (
+   p_temporada partidos.temporada%type, p_equipo equipos.nombre%type
+   
+) IS
+    CURSOR c_total_partidos_ganados is 
+    select  p.equipo_local, count(p.codigo), sum(p.puntos_local)
+    from partidos p
+    where upper(equipo_local) = p_equipo
+    and p.puntos_local> p.puntos_visitante
+    and  p.temporada=  p_temporada
+    group by p.equipo_local;
+    
+    v_equipo_local partidos.equipo_local%type;
+    v_ganado number;
+    v_puntos_anotados number;
+
+BEGIN
+    OPEN c_total_partidos_ganados;
+    LOOP
+        FETCH c_total_partidos_ganados INTO  v_equipo_local,v_ganado, v_puntos_anotados;
+    
+        EXIT WHEN c_total_partidos_ganados%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('El EQUIPO ' || v_equipo_local || ' HA GANADO ' || v_ganado || ' JUEGOS CON ' || v_puntos_anotados || ' PUNTOS. '); 
+	
+	--DEPENDE DEL EJERCICIO
+	--DBMS_OUTPUT.PUT_LINE(''); 
+    END LOOP;
+
+	--SENTECIAS INSERT, UPDATE, DELETE O CALCULO
+    CLOSE c_total_partidos_ganados;
+
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);  
+END;
+/
+declare 
+    p_temporada partidos.temporada%type; 
+    p_equipo equipos.nombre%type;
+begin 
+sp_total_partidos_ganados('98/99', 'SPURS');
+end;
+/

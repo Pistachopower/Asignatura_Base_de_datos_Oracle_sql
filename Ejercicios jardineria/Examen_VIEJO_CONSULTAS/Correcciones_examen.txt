@@ -1,0 +1,102 @@
+-- 1
+select nombre || ' '||apellido1 || ' '||apellido2
+from empleados
+where codigojefe is null;
+
+-- Obtener el pais donde se ha invertido más dinero en compras.
+-- Pais de las oficinas
+select o.pais, sum(dp.preciounidad*dp.cantidad)
+from detallepedidos dp, pedidos p, clientes c, empleados e, oficinas o
+where dp.codigopedido = p.codigopedido
+and p.codigocliente = c.codigocliente
+and c.codigoempleadorepventas = e.codigoempleado
+and e.codigooficina = o.codigooficina
+group by  o.pais;
+
+--SI HUBIERA DICHO QUE ESTE PAIS ES UNICO
+SELECT * FROM (
+            select o.pais, sum(dp.preciounidad*dp.cantidad)
+            from detallepedidos dp, pedidos p, clientes c, empleados e, oficinas o
+            where dp.codigopedido = p.codigopedido
+            and p.codigocliente = c.codigocliente
+            and c.codigoempleadorepventas = e.codigoempleado
+            and e.codigooficina = o.codigooficina
+            group by  o.pais
+            order by 2 desc)
+WHERE ROWNUM=1;
+
+-----------
+
+select max(sum(dp.preciounidad*dp.cantidad))
+from detallepedidos dp, pedidos p, clientes c, empleados e, oficinas o
+where dp.codigopedido = p.codigopedido
+and p.codigocliente = c.codigocliente
+and c.codigoempleadorepventas = e.codigoempleado
+and e.codigooficina = o.codigooficina
+group by  o.pais;
+---
+select o.pais, sum(dp.preciounidad*dp.cantidad)
+from detallepedidos dp, pedidos p, clientes c, empleados e, oficinas o
+where dp.codigopedido = p.codigopedido
+and p.codigocliente = c.codigocliente
+and c.codigoempleadorepventas = e.codigoempleado
+and e.codigooficina = o.codigooficina
+group by  o.pais
+having sum(dp.preciounidaddp.cantidad) = ( select max(sum(dp.preciounidaddp.cantidad))
+                                            from detallepedidos dp, pedidos p, clientes c, empleados e, oficinas o
+                                            where dp.codigopedido = p.codigopedido
+                                            and p.codigocliente = c.codigocliente
+                                            and c.codigoempleadorepventas = e.codigoempleado
+                                            and e.codigooficina = o.codigooficina
+                                            group by  o.pais
+                                            );
+                                            
+
+-- codigo cliente con comentario más largo
+select codigocliente as codigocliente_pesado,length(comentarios)
+from pedidos
+where length(comentarios) = (select max(length(comentarios)) from pedidos);
+
+--- CLIENTES distintos con con gama
+SELECT PR.GAMA, COUNT(DISTINCT P.CODIGOCLIENTE)
+FROM PRODUCTOS PR, DETALLEPEDIDOS DP,PEDIDOS P
+WHERE PR.CODIGOPRODUCTO = DP.CODIGOPRODUCTO
+AND P.CODIGOPEDIDO = DP.CODIGOPEDIDO
+GROUP BY PR.GAMA;
+
+
+-- EN QUE PAIS SE ESTA INVIRTIENDO
+select o.pais, sum(dp.preciounidad*dp.cantidad)
+from detallepedidos dp, pedidos p, clientes c, empleados e, oficinas o
+where dp.codigopedido = p.codigopedido
+and p.codigocliente = c.codigocliente
+and c.codigoempleadorepventas = e.codigoempleado
+and e.codigooficina = o.codigooficina
+group by  o.pais;
+
+TABLA_A (NOMBRE, INVERSION)
+
+SELECT *
+FROM TABLA_A
+WHERE INVERSION  = (SELECT MAX(INVERSION) FROM TABLA_A));
+
+SELECT *
+FROM ALUMNOS
+WHERE EDAD =(SELECT MAX(EDAD) FROM ALUMNOS);
+
+/**************PARTE PARA PRACTICAR*****************/
+
+select o.pais, sum(dp.preciounidad*dp.cantidad)
+from detallepedidos dp, pedidos p, clientes c, empleados e, oficinas o
+where dp.codigopedido = p.codigopedido
+and p.codigocliente = c.codigocliente
+and c.codigoempleadorepventas = e.codigoempleado
+and e.codigooficina = o.codigooficina
+group by  o.pais
+HAVING sum(dp.preciounidaddp.cantidad) = (select max(sum(dp.preciounidaddp.cantidad))
+                                            from detallepedidos dp, pedidos p, clientes c, empleados e, oficinas o
+                                            where dp.codigopedido = p.codigopedido
+                                            and p.codigocliente = c.codigocliente
+                                            and c.codigoempleadorepventas = e.codigoempleado
+                                            and e.codigooficina = o.codigooficina
+                                            group by  o.pais);

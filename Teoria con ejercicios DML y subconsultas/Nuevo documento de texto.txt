@@ -1,0 +1,22 @@
+6-NUMERO DE CLIENTES DE CADA PAIS
+*/
+Solucion
+select pais, COUNT(pais)
+from clientes
+group by pais;
+
+select pais from clientes;
+
+select *
+from clientes
+where pais in (select COUNT(*) as ESTADOS_UNIDOS
+                from clientes
+                where upper(pais)= 'USA');
+
+select COUNT(pais) as ESTADOS_UNIDOS
+from clientes
+where lower(pais)= 'usa';
+
+select COUNT(pais) as ESPAÑA
+from clientes
+where lower(pais)= 'spain';

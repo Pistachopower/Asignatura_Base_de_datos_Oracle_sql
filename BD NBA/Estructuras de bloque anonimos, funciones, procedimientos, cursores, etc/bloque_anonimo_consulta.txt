@@ -1,0 +1,17 @@
+DECLARE
+    V_VARIABLE TABLA.COLUMNA%TYPE;
+    V_NUM TIPO_DATO;
+    
+BEGIN
+    --CONSULTA
+    SELECT COLUMNA INTO V_
+    FROM TABLA;
+
+    DBMS_OUTPUT.PUT_LINE('TEXTO ' || v_);
+
+EXCEPTION 
+WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Killo no hay gente ');    
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ocurrió el error ' ||SQLCODE ||' ---mensaje: ' || SQLERRM);    
+END;
